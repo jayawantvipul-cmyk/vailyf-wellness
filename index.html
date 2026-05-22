@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VaiLyf Wellness — Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#1a7a4a;--gl:#25a862;--gp:#e6f7ee;
+  --am:#f5a623;--al:#fff4e0;
+  --rp:#fff0f0;--rd:#e84040;
+  --pu:#7c3aed;--pp:#f3eeff;
+  --ink:#0f1c14;--is:#3d5246;
+  --bd:#d4e8db;--sf:#f4faf6;--wh:#ffffff;
+  --r:14px;--sh:0 2px 16px rgba(26,122,74,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--sf);color:var(--ink);min-height:100vh;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ── LOGIN ── */
+#ls{background:linear-gradient(145deg,#0f3d22,#1a7a4a 55%,#25a862);align-items:center;justify-content:center;padding:24px;}
+.lcard{background:var(--wh);border-radius:24px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.brand{text-align:center;margin-bottom:28px;}
+.blogo{width:56px;height:56px;background:linear-gradient(135deg,var(--g),var(--gl));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:10px;}
+.brand h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.5px;}
+.brand p{font-size:12px;color:var(--is);margin-top:2px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:11px;font-weight:500;color:var(--is);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:1.5px solid var(--bd);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--wh);outline:none;transition:border .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--g);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.bp{background:var(--g);color:#fff;font-size:14px;font-weight:600;}
+.bp:hover{background:#155f39;transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,122,74,.3);}
+.bp:disabled{background:#aaa;transform:none;box-shadow:none;cursor:not-allowed;}
+.bs{background:var(--gp);color:var(--g);font-weight:600;}
+.bs:hover{background:#d0f0df;}
+.bo{background:transparent;color:var(--g);border:1.5px solid var(--bd);}
+.bo:hover{border-color:var(--g);background:var(--gp);}
+.bsm{padding:7px 12px;font-size:12px;border-radius:8px;}
+.bda{background:#fff0f0;color:var(--rd);border:1.5px solid #fdd;}
+.bda:hover{background:#ffe0e0;}
+.bpu{background:var(--pp);color:var(--pu);font-weight:600;}
+.bpu:hover{background:#ede5ff;}
+.wfull{width:100%;}
+.err{background:#fff0f0;color:var(--rd);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:12px;display:none;}
+.demo-box{margin-top:16px;padding:12px;background:var(--sf);border-radius:10px;border:1px solid var(--bd);}
+.demo-box p{font-size:11px;color:var(--is);margin-bottom:7px;font-weight:600;}
+.du{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--is);margin-bottom:3px;}
+.du span{color:var(--g);cursor:pointer;font-weight:600;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--wh);border-bottom:1px solid var(--bd);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-brand{display:flex;align-items:center;gap:9px;}
+.tb-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--g),var(--gl));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.tb-brand span{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.av{width:32px;height:32px;background:var(--gp);border:2px solid var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g);cursor:pointer;}
+.av.su{background:var(--pp);border-color:var(--pu);color:var(--pu);}
+.lgout{font-size:12px;color:var(--is);background:none;border:1px solid var(--bd);border-radius:7px;padding:4px 10px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.lgout:hover{color:var(--rd);border-color:#fcc;}
+
+/* ── NAV ── */
+.nav-tabs{background:var(--wh);border-bottom:1px solid var(--bd);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 14px;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.ntab{padding:11px 14px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--is);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.ntab:hover{color:var(--g);}
+.ntab.active{color:var(--g);border-bottom-color:var(--g);font-weight:600;}
+.ntab.su-tab{color:var(--pu);}
+.ntab.su-tab.active{border-bottom-color:var(--pu);}
+
+/* ── LAYOUT ── */
+.mc{flex:1;padding:18px;max-width:960px;margin:0 auto;width:100%;}
+.tp{display:none;}
+.tp.active{display:block;}
+
+/* ── CARDS ── */
+.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh);}
+.ct{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.sgrid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.sc{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:14px;box-shadow:var(--sh);}
+.sc.g{background:var(--gp);border-color:#b6e8cc;}
+.sc.am{background:var(--al);border-color:#f5d99a;}
+.sc.pu{background:var(--pp);border-color:#c4a8ff;}
+.sl{font-size:10px;color:var(--is);font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.sv{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--ink);margin:3px 0;}
+.ss{font-size:11px;color:var(--is);}
+.pbw{margin:8px 0;}
+.pbl{display:flex;justify-content:space-between;font-size:11px;color:var(--is);margin-bottom:4px;}
+.pb{height:7px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.pf{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--g),var(--gl));transition:width .6s;}
+.pf.am{background:linear-gradient(90deg,var(--am),#f7c06b);}
+.pf.rd{background:linear-gradient(90deg,#e84040,#ff7070);}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.bg{background:var(--gp);color:var(--g);}
+.ba{background:var(--al);color:#c07a00;}
+.bb{background:#eef2ff;color:#3b5bdb;}
+.br{background:var(--rp);color:var(--rd);}
+.bpu2{background:var(--pp);color:var(--pu);}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.lgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.lgrid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.stit{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+.wb{background:linear-gradient(135deg,var(--g),#1e9c56);border-radius:var(--r);padding:18px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden;}
+.wb::after{content:'🌿';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:44px;opacity:.3;}
+.wb h2{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;}
+.wb p{font-size:12px;opacity:.85;margin-top:3px;}
+.qa-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.qa{background:var(--wh);border:1.5px solid var(--bd);border-radius:var(--r);padding:12px;cursor:pointer;text-align:center;transition:all .15s;}
+.qa:hover{border-color:var(--g);background:var(--gp);transform:translateY(-1px);}
+.qa .qi{font-size:22px;margin-bottom:4px;}
+.qa .ql{font-size:11px;font-weight:600;color:var(--ink);}
+.qa .qs{font-size:10px;color:var(--is);}
+.mood-picker{display:flex;gap:7px;flex-wrap:wrap;}
+.mb{padding:7px 12px;border:1.5px solid var(--bd);border-radius:20px;background:none;font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.mb:hover,.mb.sel{border-color:var(--g);background:var(--gp);color:var(--g);font-weight:500;}
+.lbr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);}
+.lbr:last-child{border-bottom:none;}
+.lrk{width:24px;text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--is);}
+.lrk.gold{color:#d4af37;}.lrk.silver{color:#999;}.lrk.bronze{color:#cd7f32;}
+.lav{width:32px;height:32px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g);flex-shrink:0;}
+.ln{flex:1;font-weight:500;font-size:13px;}
+.ln small{display:block;font-size:10px;color:var(--is);font-weight:400;}
+.lpt{font-family:'Syne',sans-serif;font-weight:700;color:var(--g);font-size:14px;}
+.pc{border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.ph{padding:12px 14px;display:flex;align-items:center;gap:10px;background:var(--wh);}
+.pico{font-size:26px;}
+.pi{flex:1;}
+.pt{font-weight:600;font-size:14px;color:var(--ink);}
+.pm{font-size:11px;color:var(--is);margin-top:1px;}
+.pb2{padding:10px 14px;background:var(--sf);border-top:1px solid var(--bd);font-size:12px;color:var(--is);line-height:1.6;}
+.prof-hdr{background:linear-gradient(135deg,var(--g),var(--gl));border-radius:var(--r);padding:20px;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.pav{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.25);border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;font-family:'Syne',sans-serif;flex-shrink:0;}
+.pi2 h2{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
+.pi2 p{font-size:12px;opacity:.85;margin-top:2px;}
+.pb3{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.pb4{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:600;}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.mc2{background:var(--wh);border:1px solid var(--bd);border-radius:10px;padding:10px;text-align:center;}
+.mc2 .v{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--g);}
+.mc2 .l{font-size:10px;color:var(--is);margin-top:1px;}
+.ni{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd);}
+.ni:last-child{border-bottom:none;}
+.nd{width:7px;height:7px;border-radius:50%;background:var(--am);margin-top:5px;flex-shrink:0;}
+.nd.read{background:var(--bd);}
+.nt{font-size:12px;color:var(--ink);line-height:1.5;}
+.ntm{font-size:10px;color:var(--is);margin-top:2px;}
+.alg{background:#fff8e6;border:1px solid #f5d99a;border-radius:8px;padding:9px 12px;font-size:11px;color:#8a6400;display:flex;align-items:center;gap:7px;margin-bottom:12px;}
+.loading{text-align:center;padding:24px;color:var(--is);font-size:13px;}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--bd);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.already{background:var(--gp);border:1px solid #b6e8cc;border-radius:8px;padding:12px;text-align:center;font-size:13px;color:var(--g);font-weight:600;margin-bottom:14px;}
+
+/* ── MODAL ── */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center;}
+.modal.open{display:flex;}
+.msheet{background:var(--wh);border-radius:20px 20px 0 0;padding:22px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;}
+.mhandle{width:34px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 14px;}
+.mtit{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px;}
+.mclose{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--is);padding:0 4px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:50px;font-size:12px;font-weight:500;z-index:999;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── SUPERADMIN ── */
+.sa-sidebar{display:grid;grid-template-columns:200px 1fr;gap:0;min-height:calc(100vh - 120px);}
+.sa-nav{background:var(--wh);border-right:1px solid var(--bd);padding:12px 0;}
+.sa-nav-item{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;font-weight:500;color:var(--is);cursor:pointer;transition:all .15s;border-left:3px solid transparent;}
+.sa-nav-item:hover{background:var(--gp);color:var(--g);}
+.sa-nav-item.active{background:var(--pp);color:var(--pu);border-left-color:var(--pu);font-weight:600;}
+.sa-content{padding:18px;overflow-y:auto;}
+.sa-panel{display:none;}
+.sa-panel.active{display:block;}
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--bd);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:var(--sf);padding:9px 12px;text-align:left;font-weight:600;color:var(--is);border-bottom:1px solid var(--bd);white-space:nowrap;}
+td{padding:9px 12px;border-bottom:1px solid var(--bd);color:var(--ink);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f9fffe;}
+.tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;}
+.tag-g{background:var(--gp);color:var(--g);}
+.tag-r{background:var(--rp);color:var(--rd);}
+.tag-a{background:var(--al);color:#c07a00;}
+.tag-b{background:#eef2ff;color:#3b5bdb;}
+.tag-pu{background:var(--pp);color:var(--pu);}
+.flex-gap{display:flex;gap:6px;flex-wrap:wrap;}
+.chart-bar-wrap{display:flex;flex-direction:column;gap:8px;}
+.chart-bar-row{display:flex;align-items:center;gap:10px;font-size:12px;}
+.chart-bar-label{width:110px;color:var(--is);text-align:right;flex-shrink:0;}
+.chart-bar-track{flex:1;height:18px;background:var(--sf);border-radius:4px;overflow:hidden;position:relative;}
+.chart-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--g),var(--gl));transition:width .8s;}
+.chart-bar-val{width:40px;font-weight:600;color:var(--g);font-size:11px;}
+.prog-chart{display:flex;flex-direction:column;gap:6px;}
+.prog-row{display:flex;align-items:center;gap:8px;font-size:11px;}
+.prog-date{width:70px;color:var(--is);flex-shrink:0;}
+.prog-val{width:50px;font-weight:600;color:var(--g);}
+.prog-bar-t{flex:1;height:14px;background:var(--sf);border-radius:3px;overflow:hidden;}
+.prog-bar-f{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--am),#f7c06b);}
+.divider{border:none;border-top:1px solid var(--bd);margin:14px 0;}
+.info-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-size:13px;}
+.info-row:last-child{border-bottom:none;}
+.info-row .lbl{color:var(--is);}
+.info-row .val{font-weight:500;}
+
+@media(max-width:700px){
+  .sa-sidebar{grid-template-columns:1fr;}
+  .sa-nav{display:flex;overflow-x:auto;padding:8px;gap:4px;border-right:none;border-bottom:1px solid var(--bd);}
+  .sa-nav-item{border-left:none;border-bottom:3px solid transparent;padding:8px 12px;border-radius:8px;white-space:nowrap;}
+  .sa-nav-item.active{border-bottom-color:var(--pu);border-left:none;}
+  .sgrid4{grid-template-columns:repeat(2,1fr);}
+  .lgrid3,.lgrid4{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- SUPABASE -->
+<script>
+const SB='https://flwuydljrqeaoxwjfejv.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsd3V5ZGxqcnFlYW94d2pmZWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNTMzOTAsImV4cCI6MjA5MTkyOTM5MH0.9wgDEE3DQcFnMa-w0BBcf6jVs3YXlk3McSh20OOYGvA';
+const H={apikey:SK,Authorization:`Bearer ${SK}`,'Content-Type':'application/json',Accept:'application/json'};
+async function sq(table,filters={},order='',limit=''){
+  let u=`${SB}/rest/v1/${table}?`;
+  for(const[k,v]of Object.entries(filters))u+=`${k}=eq.${encodeURIComponent(v)}&`;
+  if(order)u+=`order=${order}&`;
+  if(limit)u+=`limit=${limit}&`;
+  const r=await fetch(u,{headers:H});return r.json();
+}
+async function si(table,data){
+  const r=await fetch(`${SB}/rest/v1/${table}`,{method:'POST',headers:{...H,Prefer:'return=representation'},body:JSON.stringify(data)});
+  return r.json();
+}
+async function su2(table,data,filters={}){
+  let u=`${SB}/rest/v1/${table}?`;
+  for(const[k,v]of Object.entries(filters))u+=`${k}=eq.${encodeURIComponent(v)}&`;
+  const r=await fetch(u,{method:'PATCH',headers:{...H,Prefer:'return=representation'},body:JSON.stringify(data)});
+  return r.json();
+}
+async function sd(table,filters={}){
+  let u=`${SB}/rest/v1/${table}?`;
+  for(const[k,v]of Object.entries(filters))u+=`${k}=eq.${encodeURIComponent(v)}&`;
+  const r=await fetch(u,{method:'DELETE',headers:H});return r.ok;
+}
+async function sraw(path,opts={}){
+  const r=await fetch(`${SB}/rest/v1/${path}`,{headers:H,...opts});
+  return r.json();
+}
+</script>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="ls" class="screen active">
+  <div class="lcard">
+    <div class="brand">
+      <div class="blogo">🌿</div>
+      <h1>VaiLyf Wellness</h1>
+      <p>Employee &amp; Corporate Wellness Portal</p>
+    </div>
+    <div id="errMsg" class="err">❌ Invalid Employee ID or Password</div>
+    <div class="fg"><label>Employee ID</label><input id="lid" placeholder="e.g. EMP001" autocomplete="username"/></div>
+    <div class="fg"><label>Password</label><input type="password" id="lpw" placeholder="Enter your password" autocomplete="current-password"/></div>
+    <button class="btn bp wfull" id="lbtn" onclick="doLogin()">Login to Portal →</button>
+    <div class="demo-box">
+      <p>🔑 Demo accounts — click to fill</p>
+      <div class="du">👤 Arjun Mehta (Employee) <span onclick="fd('EMP001','pass123')">EMP001 / pass123</span></div>
+      <div class="du">👤 Priya Sharma (Employee) <span onclick="fd('EMP002','pass123')">EMP002 / pass123</span></div>
+      <div class="du">🏢 HR Admin <span onclick="fd('ADMIN01','admin123')">ADMIN01 / admin123</span></div>
+      <div class="du">👑 Super Admin (You) <span onclick="fd('SUPERADMIN','super2025')">SUPERADMIN / super2025</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="as" class="screen">
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-logo">🌿</div>
+      <span>VaiLyf</span>
+    </div>
+    <div class="tb-right">
+      <div id="topAv" class="av" onclick="showTab('profile')">--</div>
+      <button class="lgout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="nav-tabs" id="navTabs">
+    <button class="ntab active" data-tab="home"        onclick="showTab('home')">🏠 Home</button>
+    <button class="ntab"        data-tab="log"         onclick="showTab('log')">📋 Daily Log</button>
+    <button class="ntab"        data-tab="challenges"  onclick="showTab('challenges')">🏆 Challenges</button>
+    <button class="ntab"        data-tab="programs"    onclick="showTab('programs')">📦 Programs</button>
+    <button class="ntab"        data-tab="leaderboard" onclick="showTab('leaderboard')">🥇 Leaderboard</button>
+    <button class="ntab"        data-tab="notif"       onclick="showTab('notif')">🔔 Updates</button>
+    <button class="ntab"        data-tab="body"        onclick="showTab('body')">📏 Body Tracker</button>
+    <button class="ntab"        data-tab="profile"     onclick="showTab('profile')">👤 Profile</button>
+    <button class="ntab"        data-tab="hradmin"     onclick="showTab('hradmin')" id="hrTab" style="display:none">⚙️ HR Admin</button>
+    <button class="ntab su-tab" data-tab="superadmin"  onclick="showTab('superadmin')" id="saTab" style="display:none">👑 Super Admin</button>
+  </div>
+  <div class="mc">
+
+    <!-- HOME -->
+    <div id="tab-home" class="tp active">
+      <div class="wb"><h2 id="wMsg">Loading…</h2><p id="wSub">Welcome back!</p></div>
+      <div class="sgrid">
+        <div class="sc g"><div class="sl">Wellness Score</div><div class="sv" id="hScore">–</div><div class="ss">Your health index</div></div>
+        <div class="sc am"><div class="sl">Streak</div><div class="sv" id="hStreak">–</div><div class="ss">Consecutive days 🔥</div></div>
+        <div class="sc"><div class="sl">Total Points</div><div class="sv" id="hPts">–</div><div class="ss">All-time earned</div></div>
+        <div class="sc"><div class="sl">Logs This Month</div><div class="sv" id="hLogs">–</div><div class="ss">Days tracked</div></div>
+      </div>
+      <div class="qa-grid">
+        <div class="qa" onclick="showTab('log')"><div class="qi">📋</div><div class="ql">Log Today</div><div class="qs">Meals, water, mood</div></div>
+        <div class="qa" onclick="showTab('body')"><div class="qi">📏</div><div class="ql">Body Tracker</div><div class="qs">Log measurements</div></div>
+        <div class="qa" onclick="showTab('leaderboard')"><div class="qi">🥇</div><div class="ql">Leaderboard</div><div class="qs">See your rank</div></div>
+        <div class="qa" onclick="showTab('challenges')"><div class="qi">🏆</div><div class="ql">Challenges</div><div class="qs">View active</div></div>
+      </div>
+      <div class="card"><div class="ct"><span>💡</span>Today's Wellness Tip</div><p id="tipTxt" style="font-size:13px;color:var(--is);line-height:1.7"></p></div>
+    </div>
+
+    <!-- DAILY LOG -->
+    <div id="tab-log" class="tp">
+      <div class="sh"><div class="stit">📋 Daily Wellness Log</div><span class="badge bg" id="logDate">Today</span></div>
+      <div id="alrLogged" class="already" style="display:none">✅ You've already logged today! Come back tomorrow. 🌟</div>
+      <div id="logForm">
+        <div class="card">
+          <div class="ct"><span>💧</span>Hydration</div>
+          <div class="lgrid">
+            <div class="fg"><label>Water Glasses</label><input type="number" id="lw" placeholder="e.g. 8" min="0" max="20"/></div>
+            <div class="fg"><label>Herbalife Shake?</label>
+              <select id="lsh"><option value="">Select…</option><option>Yes — Morning</option><option>Yes — Evening</option><option>Yes — Both</option><option>No</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>🥗</span>Nutrition</div>
+          <div class="lgrid">
+            <div class="fg"><label>Breakfast</label><select id="lbr"><option value="">Select…</option><option>Healthy (shake/fruits)</option><option>Moderate</option><option>Skipped</option><option>Unhealthy</option></select></div>
+            <div class="fg"><label>Lunch</label><select id="llu"><option value="">Select…</option><option>Healthy</option><option>Moderate</option><option>Skipped</option><option>Unhealthy</option></select></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>🏃</span>Activity &amp; Sleep</div>
+          <div class="lgrid">
+            <div class="fg"><label>Steps Today</label><input type="number" id="lst" placeholder="e.g. 7500"/></div>
+            <div class="fg"><label>Sleep (Hours)</label><input type="number" id="lsl" placeholder="e.g. 7" min="0" max="12" step="0.5"/></div>
+          </div>
+          <div class="fg"><label>Exercise Done</label><select id="lex"><option value="">Select…</option><option>Yes — 30+ mins</option><option>Yes — Light</option><option>No — Rest day</option><option>No — Skipped</option></select></div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>😊</span>Mood &amp; Energy</div>
+          <div class="fg"><label>How's your energy today?</label>
+            <div class="mood-picker">
+              <button class="mb" onclick="setMood(this,'😴 Exhausted')">😴 Exhausted</button>
+              <button class="mb" onclick="setMood(this,'😐 Low')">😐 Low</button>
+              <button class="mb" onclick="setMood(this,'😊 Good')">😊 Good</button>
+              <button class="mb" onclick="setMood(this,'⚡ High Energy')">⚡ High Energy</button>
+            </div>
+          </div>
+          <div class="fg"><label>Notes (optional)</label><textarea id="lno" rows="2" style="resize:none" placeholder="Any comments for your wellness coach…"></textarea></div>
+        </div>
+        <button class="btn bp wfull" id="subLogBtn" onclick="submitLog()">✅ Submit Today's Log (+20 pts)</button>
+      </div>
+    </div>
+
+    <!-- CHALLENGES -->
+    <div id="tab-challenges" class="tp">
+      <div class="sh"><div class="stit">🏆 Challenges</div></div>
+      <div id="challList"><div class="loading"><span class="spin"></span>Loading…</div></div>
+    </div>
+
+    <!-- PROGRAMS -->
+    <div id="tab-programs" class="tp">
+      <div class="sh"><div class="stit">📦 Your Wellness Plan</div><span class="badge bg" id="planBadge">–</span></div>
+      <div class="pc"><div class="ph"><div class="pico">🥗</div><div class="pi"><div class="pt">Personalized Nutrition Plan</div><div class="pm">Updated by Coach · Week 3</div></div><span class="badge bb">Active</span></div><div class="pb2"><strong>Morning:</strong> Herbalife F1 Shake (2 scoops) + 300ml water + fruits<br><strong>Lunch:</strong> Dal + 2 rotis + salad + buttermilk<br><strong>Evening:</strong> Herbalife Herbal Tea + light snack<br><strong>Dinner:</strong> Sabzi + roti (avoid rice after 7pm)</div></div>
+      <div class="pc"><div class="ph"><div class="pico">💧</div><div class="pi"><div class="pt">Hydration Program</div><div class="pm">Daily target: 3 litres</div></div><span class="badge bg">Active</span></div><div class="pb2">Start with 500ml on waking. Drink 250ml every 2 hours. Track in Daily Log.</div></div>
+      <div class="pc"><div class="ph"><div class="pico">🏋️</div><div class="pi"><div class="pt">Movement Plan</div><div class="pm">5 days/week · Desk-friendly</div></div><span class="badge ba">Moderate</span></div><div class="pb2"><strong>Mon/Wed/Fri:</strong> 30-min brisk walk + 10 min stretch<br><strong>Tue/Thu:</strong> 20-min desk yoga</div></div>
+      <div class="card" style="border:1.5px dashed var(--bd)"><div class="ct"><span>📞</span>Book Wellness Session</div><p style="font-size:12px;color:var(--is);margin-bottom:10px">Get a 1:1 with your wellness coach.</p><button class="btn bp" onclick="toast2('✅ Session request sent! Coach will contact you.')">Request Session</button></div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="tab-leaderboard" class="tp">
+      <div class="sh"><div class="stit">🥇 Leaderboard</div><span class="badge ba" id="lbMon">–</span></div>
+      <div id="lbList"><div class="loading"><span class="spin"></span>Loading…</div></div>
+      <div class="card" style="background:var(--al);border-color:#f5d99a;margin-top:4px"><div class="ct"><span>🎁</span>Monthly Prizes</div><p style="font-size:12px;color:var(--is);line-height:1.8">🥇 <strong>₹1,000 Amazon voucher</strong><br>🥈 <strong>₹500 Swiggy credit</strong><br>🥉 <strong>₹250 gift card</strong><br>🎖️ <strong>VaiLyf wellness kit</strong> — Most improved</p></div>
+    </div>
+
+    <!-- UPDATES -->
+    <div id="tab-notif" class="tp">
+      <div class="stit" style="margin-bottom:12px">🔔 Updates &amp; Announcements</div>
+      <div id="notifList" class="card"><div class="loading"><span class="spin"></span>Loading…</div></div>
+    </div>
+
+    <!-- BODY TRACKER -->
+    <div id="tab-body" class="tp">
+      <div class="sh"><div class="stit">📏 Body Progress Tracker</div></div>
+      <div class="card">
+        <div class="ct"><span>➕</span>Log New Measurements</div>
+        <div class="lgrid3">
+          <div class="fg"><label>Weight (kg)</label><input type="number" id="bwt" placeholder="e.g. 78" step="0.1"/></div>
+          <div class="fg"><label>Height (cm)</label><input type="number" id="bht" placeholder="e.g. 172"/></div>
+          <div class="fg"><label>Body Fat %</label><input type="number" id="bbf" placeholder="e.g. 22" step="0.1"/></div>
+          <div class="fg"><label>Waist (cm)</label><input type="number" id="bwa" placeholder="e.g. 82"/></div>
+          <div class="fg"><label>Chest (cm)</label><input type="number" id="bch" placeholder="e.g. 95"/></div>
+          <div class="fg"><label>Hips (cm)</label><input type="number" id="bhi" placeholder="e.g. 96"/></div>
+          <div class="fg"><label>BP Systolic</label><input type="number" id="bbs" placeholder="e.g. 120"/></div>
+          <div class="fg"><label>BP Diastolic</label><input type="number" id="bbd" placeholder="e.g. 80"/></div>
+          <div class="fg"><label>Resting HR (bpm)</label><input type="number" id="bhr" placeholder="e.g. 72"/></div>
+        </div>
+        <div class="fg"><label>Notes</label><textarea id="bno" rows="2" style="resize:none" placeholder="Any observations…"></textarea></div>
+        <button class="btn bp" onclick="saveBody()">📏 Save Measurements</button>
+      </div>
+      <div class="card"><div class="ct"><span>📊</span>My Progress History</div><div id="bodyHistory"><div class="loading"><span class="spin"></span>Loading…</div></div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="tab-profile" class="tp">
+      <div class="prof-hdr">
+        <div class="pav" id="profAv">--</div>
+        <div class="pi2"><h2 id="profNm">–</h2><p id="profDp">–</p><div class="pb3"><span class="pb4" id="profPl">–</span><span class="pb4" id="profSt">–</span></div></div>
+      </div>
+      <div class="mgrid">
+        <div class="mc2"><div class="v" id="pmSc">–</div><div class="l">Score</div></div>
+        <div class="mc2"><div class="v" id="pmPt">–</div><div class="l">Points</div></div>
+        <div class="mc2"><div class="v" id="pmRk">#–</div><div class="l">Rank</div></div>
+      </div>
+      <div class="card">
+        <div class="ct"><span>📊</span>Body Stats</div>
+        <div class="lgrid">
+          <div class="fg"><label>Weight (kg)</label><input type="number" id="pw" placeholder="e.g. 75"/></div>
+          <div class="fg"><label>Height (cm)</label><input type="number" id="ph" placeholder="e.g. 172"/></div>
+          <div class="fg"><label>Age</label><input type="number" id="pa"/></div>
+          <div class="fg"><label>Goal</label><select id="pg"><option>Weight Loss</option><option>Muscle Gain</option><option>Better Energy</option><option>Stress Management</option><option>General Wellness</option></select></div>
+        </div>
+        <button class="btn bs" onclick="saveProfile()">Save Stats</button>
+      </div>
+      <div class="card">
+        <div class="ct"><span>🔒</span>Change Password</div>
+        <div class="fg"><label>New Password</label><input type="password" id="np" placeholder="Min 6 characters"/></div>
+        <button class="btn bo" onclick="changePw()">Update Password</button>
+      </div>
+    </div>
+
+    <!-- HR ADMIN -->
+    <div id="tab-hradmin" class="tp">
+      <div class="alg">⚙️ <strong>HR Admin</strong> — Manage your organisation's wellness program</div>
+      <div class="sh"><div class="stit">📊 Organisation Overview</div></div>
+      <div id="hrStats" class="sgrid4"><div class="loading" style="grid-column:span 4"><span class="spin"></span>Loading…</div></div>
+      <div class="card">
+        <div class="ct"><span>📢</span>Send Announcement</div>
+        <div class="fg"><label>Title</label><input id="anTit" placeholder="e.g. New wellness workshop"/></div>
+        <div class="fg"><label>Message</label><textarea id="anBod" rows="2" style="resize:none" placeholder="Type announcement…"></textarea></div>
+        <button class="btn bp" onclick="sendAnnounce()">Send to All Employees</button>
+      </div>
+      <div class="card">
+        <div class="ct"><span>👤</span>Add Employee</div>
+        <div class="lgrid4">
+          <div class="fg"><label>Employee ID</label><input id="neId" placeholder="EMP088"/></div>
+          <div class="fg"><label>Name</label><input id="neNm" placeholder="Full name"/></div>
+          <div class="fg"><label>Department</label><input id="neDp" placeholder="Marketing"/></div>
+          <div class="fg"><label>Plan</label><select id="nePl"><option>Basic</option><option>Premium</option><option>Executive</option></select></div>
+        </div>
+        <button class="btn bs" onclick="hrAddEmp()">Add Employee</button>
+      </div>
+      <div class="card">
+        <div class="ct"><span>🏆</span>Create Challenge</div>
+        <div class="lgrid">
+          <div class="fg"><label>Challenge Name</label><input id="ncNm" placeholder="CEO Fitness Challenge"/></div>
+          <div class="fg"><label>Description</label><input id="ncDe" placeholder="Daily activity…"/></div>
+          <div class="fg"><label>Duration</label><input id="ncDu" placeholder="21 days"/></div>
+          <div class="fg"><label>Prize</label><input id="ncPr" placeholder="₹1,000 voucher"/></div>
+        </div>
+        <button class="btn bp" onclick="hrCreateChall()">Launch Challenge</button>
+      </div>
+    </div>
+
+    <!-- ══ SUPER ADMIN ══ -->
+    <div id="tab-superadmin" class="tp">
+      <div class="sa-sidebar">
+        <!-- SA NAV -->
+        <div class="sa-nav">
+          <div class="sa-nav-item active" onclick="saPanel('dash')">📊 Dashboard</div>
+          <div class="sa-nav-item" onclick="saPanel('orgs')">🏢 Organisations</div>
+          <div class="sa-nav-item" onclick="saPanel('users')">👥 All Users</div>
+          <div class="sa-nav-item" onclick="saPanel('reports')">📈 Reports</div>
+          <div class="sa-nav-item" onclick="saPanel('body_reports')">📏 Body Reports</div>
+          <div class="sa-nav-item" onclick="saPanel('challenges_sa')">🏆 Challenges</div>
+          <div class="sa-nav-item" onclick="saPanel('announce_sa')">📢 Announcements</div>
+          <div class="sa-nav-item" onclick="saPanel('reset_pw')">🔒 Reset Passwords</div>
+        </div>
+        <!-- SA CONTENT -->
+        <div class="sa-content">
+
+          <!-- DASHBOARD -->
+          <div id="sa-dash" class="sa-panel active">
+            <div class="stit" style="margin-bottom:12px">📊 Platform Overview</div>
+            <div id="saDashStats" class="sgrid4"><div class="loading" style="grid-column:span 4"><span class="spin"></span>Loading…</div></div>
+            <div class="card"><div class="ct"><span>🏢</span>Organisations Activity</div><div id="saOrgBar"><div class="loading"><span class="spin"></span></div></div></div>
+            <div class="card"><div class="ct"><span>🔥</span>Top Performers (All Orgs)</div><div id="saTopPerf"><div class="loading"><span class="spin"></span></div></div></div>
+          </div>
+
+          <!-- ORGANISATIONS -->
+          <div id="sa-orgs" class="sa-panel">
+            <div class="sh"><div class="stit">🏢 Organisations</div><button class="btn bs bsm" onclick="openModal('orgModal')">+ Add Organisation</button></div>
+            <div id="orgTable"><div class="loading"><span class="spin"></span>Loading…</div></div>
+          </div>
+
+          <!-- ALL USERS -->
+          <div id="sa-users" class="sa-panel">
+            <div class="sh">
+              <div class="stit">👥 All Users</div>
+              <button class="btn bs bsm" onclick="openModal('addUserModal')">+ Add User</button>
+            </div>
+            <div class="fg" style="margin-bottom:10px">
+              <input id="userSearch" placeholder="🔍 Search by name, ID, department…" oninput="filterUsers()" style="max-width:320px"/>
+            </div>
+            <div id="userTable"><div class="loading"><span class="spin"></span>Loading…</div></div>
+          </div>
+
+          <!-- REPORTS -->
+          <div id="sa-reports" class="sa-panel">
+            <div class="stit" style="margin-bottom:12px">📈 Progress Reports</div>
+            <div class="card">
+              <div class="ct"><span>🔎</span>Filter</div>
+              <div class="lgrid">
+                <div class="fg"><label>Organisation</label><select id="rptOrg" onchange="loadReport()"><option value="">All Organisations</option></select></div>
+                <div class="fg"><label>Employee (optional)</label><select id="rptEmp" onchange="loadReport()"><option value="">All Employees</option></select></div>
+              </div>
+            </div>
+            <div id="reportOut"><div class="loading"><span class="spin"></span>Loading…</div></div>
+          </div>
+
+          <!-- BODY REPORTS -->
+          <div id="sa-body_reports" class="sa-panel">
+            <div class="stit" style="margin-bottom:12px">📏 Body Parameter Reports</div>
+            <div class="card">
+              <div class="ct"><span>🔎</span>Select Employee</div>
+              <div class="lgrid">
+                <div class="fg"><label>Organisation</label><select id="brOrg" onchange="loadBodyEmpList()"><option value="">All</option></select></div>
+                <div class="fg"><label>Employee</label><select id="brEmp" onchange="loadBodyReport()"><option value="">Select employee…</option></select></div>
+              </div>
+            </div>
+            <div id="bodyRptOut"></div>
+            <div class="card" style="margin-top:4px">
+              <div class="ct"><span>➕</span>Add Body Measurement for Employee</div>
+              <div class="fg"><label>Employee ID (manual)</label><input id="brmEid" placeholder="e.g. EMP001"/></div>
+              <div class="lgrid3">
+                <div class="fg"><label>Weight (kg)</label><input type="number" id="brmWt" step="0.1"/></div>
+                <div class="fg"><label>Body Fat %</label><input type="number" id="brmBf" step="0.1"/></div>
+                <div class="fg"><label>Waist (cm)</label><input type="number" id="brmWa"/></div>
+                <div class="fg"><label>BP Systolic</label><input type="number" id="brmBs"/></div>
+                <div class="fg"><label>BP Diastolic</label><input type="number" id="brmBd"/></div>
+                <div class="fg"><label>Resting HR</label><input type="number" id="brmHr"/></div>
+              </div>
+              <div class="fg"><label>Notes</label><textarea id="brmNo" rows="2" style="resize:none"></textarea></div>
+              <button class="btn bp" onclick="adminAddBody()">Save Measurement</button>
+            </div>
+          </div>
+
+          <!-- CHALLENGES SA -->
+          <div id="sa-challenges_sa" class="sa-panel">
+            <div class="sh"><div class="stit">🏆 All Challenges</div><button class="btn bs bsm" onclick="openModal('challModal')">+ New Challenge</button></div>
+            <div id="saChallTable"><div class="loading"><span class="spin"></span>Loading…</div></div>
+          </div>
+
+          <!-- ANNOUNCEMENTS SA -->
+          <div id="sa-announce_sa" class="sa-panel">
+            <div class="sh"><div class="stit">📢 Announcements</div></div>
+            <div class="card">
+              <div class="ct"><span>✍️</span>New Announcement</div>
+              <div class="fg"><label>Title</label><input id="saAnTit" placeholder="e.g. Platform update"/></div>
+              <div class="fg"><label>Message</label><textarea id="saAnBod" rows="3" style="resize:none" placeholder="Write your message…"></textarea></div>
+              <button class="btn bp" onclick="saSendAnnounce()">📢 Broadcast to All</button>
+            </div>
+            <div id="saAnnList"><div class="loading"><span class="spin"></span>Loading…</div></div>
+          </div>
+
+          <!-- RESET PASSWORDS -->
+          <div id="sa-reset_pw" class="sa-panel">
+            <div class="stit" style="margin-bottom:12px">🔒 Reset Login Credentials</div>
+            <div class="card">
+              <div class="ct"><span>🔍</span>Find User</div>
+              <div class="lgrid">
+                <div class="fg"><label>Employee ID</label><input id="rpEid" placeholder="e.g. EMP001" oninput="lookupUser()"/></div>
+                <div class="fg"><label>Found User</label><input id="rpName" readonly placeholder="Will auto-fill…" style="background:var(--sf)"/></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ct"><span>✏️</span>Change Credentials</div>
+              <div class="lgrid">
+                <div class="fg"><label>New Employee ID (optional)</label><input id="rpNewId" placeholder="Leave blank to keep same"/></div>
+                <div class="fg"><label>New Password</label><input type="password" id="rpNewPw" placeholder="Min 6 characters"/></div>
+              </div>
+              <div class="fg"><label>Change Role</label>
+                <select id="rpRole"><option value="">— Keep current —</option><option value="employee">Employee</option><option value="admin">HR Admin</option><option value="superadmin">Super Admin</option></select>
+              </div>
+              <button class="btn bp" onclick="resetCredentials()">🔒 Apply Changes</button>
+            </div>
+            <div class="card">
+              <div class="ct"><span>⚠️</span>Delete User</div>
+              <p style="font-size:12px;color:var(--is);margin-bottom:10px">Enter the Employee ID above, then click delete. This cannot be undone.</p>
+              <button class="btn bda" onclick="deleteUser()">🗑️ Delete This User</button>
+            </div>
+          </div>
+
+        </div><!-- /sa-content -->
+      </div>
+    </div>
+
+  </div><!-- /mc -->
+</div><!-- /app -->
+
+<!-- ═══ MODALS ═══ -->
+<!-- Log success -->
+<div id="logModal" class="modal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="font-size:48px">🎉</div>
+      <div class="mtit" style="text-align:center">Log Submitted!</div>
+      <p style="font-size:13px;color:var(--is);margin-bottom:12px">You earned <strong style="color:var(--g)">+20 points</strong>!</p>
+      <div style="background:var(--gp);border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--g)" id="modalSt">–</div>
+      <button class="btn bp wfull" onclick="closeModal('logModal');showTab('home')">Back to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Org -->
+<div id="orgModal" class="modal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <button class="mclose" onclick="closeModal('orgModal')">✕</button>
+    <div class="mtit">🏢 Add Organisation</div>
+    <div class="fg"><label>Organisation Name</label><input id="moName" placeholder="e.g. TechCorp India"/></div>
+    <div class="lgrid">
+      <div class="fg"><label>City</label><input id="moCity" placeholder="Mumbai"/></div>
+      <div class="fg"><label>Plan</label><select id="moPlan"><option>Basic</option><option>Premium</option><option>Enterprise</option></select></div>
+    </div>
+    <button class="btn bp wfull" onclick="addOrg()">Add Organisation</button>
+  </div>
+</div>
+
+<!-- Add User (SA) -->
+<div id="addUserModal" class="modal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <button class="mclose" onclick="closeModal('addUserModal')">✕</button>
+    <div class="mtit">👤 Add New User</div>
+    <div class="lgrid">
+      <div class="fg"><label>Employee ID</label><input id="auId" placeholder="EMP099"/></div>
+      <div class="fg"><label>Full Name</label><input id="auNm" placeholder="Name"/></div>
+      <div class="fg"><label>Department</label><input id="auDp" placeholder="Sales"/></div>
+      <div class="fg"><label>Password</label><input type="password" id="auPw" placeholder="Initial password"/></div>
+    </div>
+    <div class="lgrid">
+      <div class="fg"><label>Role</label><select id="auRl"><option value="employee">Employee</option><option value="admin">HR Admin</option><option value="superadmin">Super Admin</option></select></div>
+      <div class="fg"><label>Plan</label><select id="auPl"><option>Basic</option><option>Premium</option><option>Executive</option></select></div>
+    </div>
+    <div class="fg"><label>Organisation</label><select id="auOrg"><option value="">None / Super Admin</option></select></div>
+    <button class="btn bp wfull" onclick="saAddUser()">Create User</button>
+  </div>
+</div>
+
+<!-- Edit User -->
+<div id="editUserModal" class="modal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <button class="mclose" onclick="closeModal('editUserModal')">✕</button>
+    <div class="mtit">✏️ Edit User</div>
+    <input type="hidden" id="euOldId"/>
+    <div class="lgrid">
+      <div class="fg"><label>Employee ID</label><input id="euId"/></div>
+      <div class="fg"><label>Full Name</label><input id="euNm"/></div>
+      <div class="fg"><label>Department</label><input id="euDp"/></div>
+      <div class="fg"><label>Role</label><select id="euRl"><option value="employee">Employee</option><option value="admin">HR Admin</option><option value="superadmin">Super Admin</option></select></div>
+      <div class="fg"><label>Plan</label><select id="euPl"><option>Basic</option><option>Premium</option><option>Executive</option></select></div>
+      <div class="fg"><label>Status</label><select id="euSt"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+    </div>
+    <div class="fg"><label>Organisation</label><select id="euOrg"><option value="">None</option></select></div>
+    <button class="btn bp wfull" onclick="saveEditUser()">Save Changes</button>
+  </div>
+</div>
+
+<!-- Create Challenge -->
+<div id="challModal" class="modal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <button class="mclose" onclick="closeModal('challModal')">✕</button>
+    <div class="mtit">🏆 New Challenge</div>
+    <div class="fg"><label>Challenge Name</label><input id="cmNm" placeholder="CEO Fitness Challenge"/></div>
+    <div class="fg"><label>Description</label><input id="cmDe" placeholder="Daily activities…"/></div>
+    <div class="lgrid">
+      <div class="fg"><label>Duration</label><input id="cmDu" placeholder="21 days"/></div>
+      <div class="fg"><label>Prize</label><input id="cmPr" placeholder="₹1,000 voucher"/></div>
+    </div>
+    <button class="btn bp wfull" onclick="saCreateChall()">Launch Challenge</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- ═══ SCRIPT ═══ -->
+<script>
+// ── STATE ──
+let CU=null, mood='', allUsers=[];
+const TIPS=['💧 Drinking 500ml of water first thing boosts metabolism by up to 30%.','🥗 Eating protein at breakfast reduces cravings all day.','🚶 A 10-min walk after lunch significantly lowers blood sugar.','😴 Going to bed 30 mins earlier beats coffee for energy.','🌿 Deep breathing for 2 mins cuts cortisol by 15%.','🥤 Herbalife F1 Shake in the morning sets up your nutrition.','🏃 Desk stretches every 90 mins prevent back pain.'];
+
+// ── HELPERS ──
+const $=id=>document.getElementById(id);
+function toast2(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+function openModal(id){$(id).classList.add('open');}
+function closeModal(id){$(id).classList.remove('open');}
+function showTab(tab){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  $('tab-'+tab).classList.add('active');
+  const b=document.querySelector(`[data-tab="${tab}"]`);
+  if(b)b.classList.add('active');
+}
+function saPanel(p){
+  document.querySelectorAll('.sa-panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.sa-nav-item').forEach(x=>x.classList.remove('active'));
+  $('sa-'+p).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // lazy load
+  if(p==='dash')loadSaDash();
+  else if(p==='orgs')loadOrgs();
+  else if(p==='users')loadUsers();
+  else if(p==='reports')loadReportFilters();
+  else if(p==='body_reports')loadBodyReportFilters();
+  else if(p==='challenges_sa')loadSaChall();
+  else if(p==='announce_sa')loadSaAnn();
+}
+function greeting(){const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening';}
+function timeAgo(ts){const d=Math.floor((Date.now()-new Date(ts))/1000);if(d<60)return 'Just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return Math.floor(d/86400)+'d ago';}
+function setMood(el,m){document.querySelectorAll('.mb').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');mood=m;}
+function fd(id,pw){$('lid').value=id;$('lpw').value=pw;}
+function roleBadge(r){if(r==='superadmin')return '<span class="tag tag-pu">Super Admin</span>';if(r==='admin')return '<span class="tag tag-b">HR Admin</span>';return '<span class="tag tag-g">Employee</span>';}
+function statusBadge(s){return s==='active'?'<span class="tag tag-g">Active</span>':'<span class="tag tag-r">Inactive</span>';}
+
+// ── AUTH ──
+async function doLogin(){
+  const id=$('lid').value.trim().toUpperCase(), pw=$('lpw').value;
+  const btn=$('lbtn'); btn.disabled=true; btn.textContent='Logging in…';
+  $('errMsg').style.display='none';
+  try{
+    const rows=await sq('vailyf_employees',{employee_id:id,password:pw});
+    if(rows&&rows.length>0){CU=rows[0];await startApp();}
+    else{$('errMsg').style.display='block';}
+  }catch(e){$('errMsg').textContent='⚠️ Connection error.';$('errMsg').style.display='block';}
+  btn.disabled=false;btn.textContent='Login to Portal →';
+}
+async function startApp(){
+  $('ls').classList.remove('active');$('as').classList.add('active');
+  const u=CU, ini=u.initials||(u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase());
+  $('topAv').textContent=ini;
+  if(u.role==='superadmin')$('topAv').classList.add('su');
+  $('wMsg').textContent=greeting()+', '+u.name.split(' ')[0]+'! 👋';
+  $('wSub').textContent=u.streak>0?`You're on a ${u.streak}-day streak! 🔥`:'Start your wellness journey today!';
+  $('hScore').textContent=u.wellness_score||50;
+  $('hStreak').textContent=u.streak||0;
+  $('hPts').textContent=u.total_points||0;
+  $('tipTxt').textContent=TIPS[new Date().getDay()%TIPS.length];
+  $('logDate').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  $('lbMon').textContent=new Date().toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+  $('planBadge').textContent=u.plan||'Basic';
+  // profile
+  $('profAv').textContent=ini;$('profNm').textContent=u.name;
+  $('profDp').textContent=(u.department||'')+'·'+u.employee_id;
+  $('profPl').textContent=(u.plan||'Basic')+' Plan';
+  $('profSt').textContent=(u.streak||0)+'-day streak 🔥';
+  $('pmSc').textContent=u.wellness_score||50;$('pmPt').textContent=u.total_points||0;
+  if(u.weight_kg)$('pw').value=u.weight_kg;if(u.height_cm)$('ph').value=u.height_cm;if(u.age)$('pa').value=u.age;if(u.goal)$('pg').value=u.goal;
+  // role gating
+  if(u.role==='admin'||u.role==='superadmin')$('hrTab').style.display='flex';
+  if(u.role==='superadmin'){$('saTab').style.display='flex';loadSaDash();}
+  // async loads
+  loadMonthLogs();checkTodayLog();loadLeaderboard();loadChallenges();loadAnnouncements();loadBodyHistory();
+}
+function doLogout(){CU=null;$('as').classList.remove('active');$('ls').classList.add('active');$('lid').value='';$('lpw').value='';showTab('home');$('hrTab').style.display='none';$('saTab').style.display='none';$('topAv').classList.remove('su');}
+
+// ── DATA LOADS ──
+async function loadMonthLogs(){
+  try{const fd=new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString().split('T')[0];
+  const r=await fetch(`${SB}/rest/v1/vailyf_daily_logs?employee_id=eq.${CU.employee_id}&log_date=gte.${fd}&select=id`,{headers:H});
+  const l=await r.json();$('hLogs').textContent=Array.isArray(l)?l.length:0;}catch(e){$('hLogs').textContent='–';}
+}
+async function checkTodayLog(){
+  try{const t=new Date().toISOString().split('T')[0];
+  const r=await sq('vailyf_daily_logs',{employee_id:CU.employee_id,log_date:t});
+  if(r&&r.length>0){$('alrLogged').style.display='block';$('logForm').style.display='none';}
+  else{$('alrLogged').style.display='none';$('logForm').style.display='block';}}catch(e){}
+}
+async function loadLeaderboard(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=name,initials,department,total_points,streak&order=total_points.desc&limit=10`,{headers:H});
+  const rows=await r.json();
+  const medals=['🥇','🥈','🥉'];const rc=['gold','silver','bronze'];
+  let html='',rank='–';
+  rows.forEach((row,i)=>{
+    const self=row.name===CU.name;
+    const ini=row.initials||row.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    if(self)rank='#'+(i+1);
+    html+=`<div class="lbr" ${self?'style="background:var(--gp);border-radius:8px;padding:9px 7px;"':''}>
+      <div class="lrk ${rc[i]||''}">${medals[i]||(i+1)}</div>
+      <div class="lav" ${self?'style="background:var(--g);color:#fff"':''}>${ini}</div>
+      <div class="ln">${self?'<strong>You ('+row.name.split(' ')[0]+')</strong>':row.name}<small>${row.department||''} ${row.streak>0?'· '+row.streak+'d 🔥':''}</small></div>
+      <div class="lpt" ${self?'style="color:var(--g)"':''}>${row.total_points||0}</div>
+    </div>`;
+  });
+  $('lbList').innerHTML=`<div class="card">${html}</div>`;$('pmRk').textContent=rank;}catch(e){$('lbList').innerHTML='<div class="card"><p style="font-size:12px;color:var(--is)">Could not load.</p></div>';}
+}
+async function loadChallenges(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_challenges?order=created_at.desc`,{headers:H});
+  const rows=await r.json();
+  const pr=await fetch(`${SB}/rest/v1/vailyf_challenge_participants?employee_id=eq.${CU.employee_id}&select=challenge_id`,{headers:H});
+  const parts=await pr.json();
+  const joined=new Set((parts||[]).map(p=>p.challenge_id));
+  const icons=['🥤','📏','🏢','💪','🌟'];const ic=['g','a','b','g','a'];
+  let html='<div class="card"><div class="ct"><span>📅</span>All Challenges</div>';
+  (rows||[]).forEach((c,i)=>{
+    const isJ=joined.has(c.id);
+    const sb=c.status==='active'?'<span class="badge bg">Active</span>':c.status==='upcoming'?'<span class="badge ba">Upcoming</span>':'<span class="badge" style="background:#f0f0f0;color:#666">Ended</span>';
+    html+=`<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)">
+      <div style="width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--${ic[i%5]==='g'?'gp':ic[i%5]==='a'?'al':'pp'})">${icons[i%5]}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:13px">${c.name}</div><div style="font-size:11px;color:var(--is);margin-top:1px">${c.description||''}</div><div style="font-size:10px;color:var(--g);font-weight:600;margin-top:3px">${c.prize?'🎁 '+c.prize:''} ${c.duration?'· '+c.duration:''}</div></div>
+      ${isJ?'<span class="badge bg">Joined ✓</span>':c.status==='active'?`<button class="btn bs bsm" onclick="joinChall('${c.id}','${c.name}',this)">Join</button>`:'<button class="btn bo bsm" onclick="toast2(\'🔔 We\'ll notify you!\')">Notify Me</button>'}
+    </div>`;
+  });
+  html+='</div>';$('challList').innerHTML=html;}catch(e){$('challList').innerHTML='<div class="card"><p style="font-size:12px;color:var(--is)">Could not load.</p></div>';}
+}
+async function loadAnnouncements(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_announcements?order=created_at.desc&limit=10`,{headers:H});
+  const rows=await r.json();
+  let html='';
+  (rows||[]).forEach((a,i)=>{html+=`<div class="ni"><div class="nd ${i>1?'read':''}"></div><div><div class="nt"><strong>${a.title}</strong><br>${a.body}</div><div class="ntm">${timeAgo(a.created_at)}</div></div></div>`;});
+  $('notifList').innerHTML=html||'<p style="font-size:12px;color:var(--is)">No announcements yet.</p>';}catch(e){}
+}
+async function loadBodyHistory(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_body_params?employee_id=eq.${CU.employee_id}&order=recorded_date.desc&limit=10`,{headers:H});
+  const rows=await r.json();
+  if(!rows||!rows.length){$('bodyHistory').innerHTML='<p style="font-size:12px;color:var(--is)">No measurements yet. Log your first one above!</p>';return;}
+  let html='<div class="table-wrap"><table><thead><tr><th>Date</th><th>Weight</th><th>BMI</th><th>Body Fat</th><th>Waist</th><th>BP</th><th>HR</th></tr></thead><tbody>';
+  rows.forEach(r=>{html+=`<tr><td>${r.recorded_date}</td><td>${r.weight_kg||'–'}</td><td>${r.bmi||'–'}</td><td>${r.body_fat_pct||'–'}%</td><td>${r.waist_cm||'–'}</td><td>${r.bp_systolic?r.bp_systolic+'/'+r.bp_diastolic:'–'}</td><td>${r.resting_hr||'–'}</td></tr>`;});
+  html+='</tbody></table></div>';
+  // progress bars for latest vs first
+  if(rows.length>1){
+    const latest=rows[0], first=rows[rows.length-1];
+    const wChange=first.weight_kg?(((first.weight_kg-latest.weight_kg)/first.weight_kg)*100).toFixed(1):0;
+    html+=`<div style="margin-top:12px;padding:12px;background:var(--gp);border-radius:8px;font-size:12px;color:var(--g)">
+      📉 Weight change: <strong>${wChange>0?'-'+wChange:'+'+(Math.abs(wChange))}% since first entry</strong> (${first.weight_kg}kg → ${latest.weight_kg}kg)
+    </div>`;
+  }
+  $('bodyHistory').innerHTML=html;}catch(e){$('bodyHistory').innerHTML='<p style="font-size:12px;color:var(--is)">Error loading.</p>';}
+}
+
+// ── ACTIONS ──
+async function submitLog(){
+  const btn=$('subLogBtn'); btn.disabled=true; btn.textContent='Saving…';
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    await si('vailyf_daily_logs',{employee_id:CU.employee_id,log_date:today,water_glasses:parseInt($('lw').value)||null,shake_taken:$('lsh').value||null,breakfast:$('lbr').value||null,lunch:$('llu').value||null,steps:parseInt($('lst').value)||null,sleep_hours:parseFloat($('lsl').value)||null,exercise:$('lex').value||null,mood:mood||null,notes:$('lno').value||null,points_earned:20});
+    const np=(CU.total_points||0)+20, ns=(CU.streak||0)+1, nsc=Math.min(100,(CU.wellness_score||50)+2);
+    await su2('vailyf_employees',{total_points:np,streak:ns,wellness_score:nsc},{employee_id:CU.employee_id});
+    CU.total_points=np;CU.streak=ns;CU.wellness_score=nsc;
+    $('hPts').textContent=np;$('hStreak').textContent=ns;$('hScore').textContent=nsc;$('pmPt').textContent=np;$('pmSc').textContent=nsc;
+    $('modalSt').innerHTML=`🔥 Streak: <strong>${ns} days</strong> &nbsp;·&nbsp; Total: <strong>${np} points</strong>`;
+    openModal('logModal');$('alrLogged').style.display='block';$('logForm').style.display='none';
+    loadLeaderboard();loadMonthLogs();
+  }catch(e){toast2('⚠️ Could not save. Please try again.');}
+  btn.disabled=false;btn.textContent='✅ Submit Today\'s Log (+20 pts)';
+}
+async function joinChall(id,name,btn){btn.disabled=true;
+  try{await si('vailyf_challenge_participants',{challenge_id:id,employee_id:CU.employee_id});toast2('✅ Joined: '+name+'!');btn.outerHTML='<span class="badge bg">Joined ✓</span>';}
+  catch(e){toast2('⚠️ Could not join.');btn.disabled=false;}
+}
+async function saveProfile(){
+  try{const d={weight_kg:parseFloat($('pw').value)||null,height_cm:parseFloat($('ph').value)||null,age:parseInt($('pa').value)||null,goal:$('pg').value||null};
+  await su2('vailyf_employees',d,{employee_id:CU.employee_id});Object.assign(CU,d);toast2('✅ Profile updated!');}
+  catch(e){toast2('⚠️ Could not save.');}
+}
+async function changePw(){const np=$('np').value;if(!np||np.length<6){toast2('⚠️ Min 6 characters');return;}
+  try{await su2('vailyf_employees',{password:np},{employee_id:CU.employee_id});toast2('✅ Password changed!');$('np').value='';}
+  catch(e){toast2('⚠️ Could not update.');}
+}
+async function saveBody(){
+  try{await si('vailyf_body_params',{employee_id:CU.employee_id,recorded_date:new Date().toISOString().split('T')[0],weight_kg:parseFloat($('bwt').value)||null,height_cm:parseFloat($('bht').value)||null,body_fat_pct:parseFloat($('bbf').value)||null,waist_cm:parseFloat($('bwa').value)||null,chest_cm:parseFloat($('bch').value)||null,hips_cm:parseFloat($('bhi').value)||null,bp_systolic:parseInt($('bbs').value)||null,bp_diastolic:parseInt($('bbd').value)||null,resting_hr:parseInt($('bhr').value)||null,notes:$('bno').value||null,recorded_by:CU.employee_id});
+  toast2('📏 Measurements saved!');['bwt','bht','bbf','bwa','bch','bhi','bbs','bbd','bhr','bno'].forEach(i=>$(i).value='');loadBodyHistory();}
+  catch(e){toast2('⚠️ Could not save.');}
+}
+async function sendAnnounce(){const t=$('anTit').value.trim(),b=$('anBod').value.trim();
+  if(!t||!b){toast2('⚠️ Fill title and message');return;}
+  try{await si('vailyf_announcements',{title:t,body:b,created_by:CU.employee_id});toast2('📢 Sent!');$('anTit').value='';$('anBod').value='';loadAnnouncements();}
+  catch(e){toast2('⚠️ Error.');}
+}
+async function hrAddEmp(){const id=$('neId').value.trim().toUpperCase(),nm=$('neNm').value.trim();
+  if(!id||!nm){toast2('⚠️ ID and Name required');return;}
+  try{const ini=nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  await si('vailyf_employees',{employee_id:id,password:'pass123',name:nm,department:$('neDp').value,plan:$('nePl').value,role:'employee',initials:ini,wellness_score:50,streak:0,total_points:0,status:'active',org_id:CU.org_id||null});
+  toast2('✅ Employee added! Default: pass123');$('neId').value='';$('neNm').value='';$('neDp').value='';}
+  catch(e){toast2('⚠️ ID may already exist.');}
+}
+async function hrCreateChall(){const nm=$('ncNm').value.trim();if(!nm){toast2('⚠️ Name required');return;}
+  try{await si('vailyf_challenges',{name:nm,description:$('ncDe').value,duration:$('ncDu').value,prize:$('ncPr').value,status:'active',start_date:new Date().toISOString().split('T')[0]});
+  toast2('🏆 Challenge created!');$('ncNm').value='';$('ncDe').value='';$('ncDu').value='';$('ncPr').value='';loadChallenges();}
+  catch(e){toast2('⚠️ Error.');}
+}
+
+// ── HR ADMIN STATS ──
+async function loadHrStats(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=wellness_score,status`,{headers:H});
+  const e=await r.json();
+  const tot=e.length, avg=tot>0?Math.round(e.reduce((s,x)=>s+(x.wellness_score||50),0)/tot):0;
+  const today=new Date().toISOString().split('T')[0];
+  const lr=await fetch(`${SB}/rest/v1/vailyf_daily_logs?log_date=eq.${today}&select=id`,{headers:H});
+  const logs=await lr.json();
+  $('hrStats').innerHTML=`
+    <div class="sc g"><div class="sl">Total Employees</div><div class="sv">${tot}</div></div>
+    <div class="sc am"><div class="sl">Active Today</div><div class="sv">${logs.length}</div></div>
+    <div class="sc"><div class="sl">Avg. Score</div><div class="sv">${avg}</div></div>
+    <div class="sc"><div class="sl">Engagement</div><div class="sv">${tot>0?Math.round(logs.length/tot*100):0}%</div></div>`;}
+  catch(e){}
+}
+
+// ── SUPER ADMIN ──
+async function loadSaDash(){
+  try{
+    const [emps,orgs,logs,challs]=await Promise.all([
+      fetch(`${SB}/rest/v1/vailyf_employees?select=wellness_score,total_points,role`,{headers:H}).then(r=>r.json()),
+      fetch(`${SB}/rest/v1/vailyf_organisations?select=id,name,status`,{headers:H}).then(r=>r.json()),
+      fetch(`${SB}/rest/v1/vailyf_daily_logs?log_date=gte.${new Date().toISOString().split('T')[0]}&select=id`,{headers:H}).then(r=>r.json()),
+      fetch(`${SB}/rest/v1/vailyf_challenges?status=eq.active&select=id`,{headers:H}).then(r=>r.json()),
+    ]);
+    const empOnly=emps.filter(e=>e.role==='employee');
+    const avgSc=empOnly.length?Math.round(empOnly.reduce((s,e)=>s+(e.wellness_score||50),0)/empOnly.length):0;
+    $('saDashStats').innerHTML=`
+      <div class="sc g"><div class="sl">Total Employees</div><div class="sv">${empOnly.length}</div></div>
+      <div class="sc am"><div class="sl">Organisations</div><div class="sv">${orgs.length}</div></div>
+      <div class="sc"><div class="sl">Logs Today</div><div class="sv">${logs.length}</div></div>
+      <div class="sc pu"><div class="sl">Active Challenges</div><div class="sv">${challs.length}</div></div>`;
+    // org activity bar
+    const orgEmpMap={};
+    const allEmpsR=await fetch(`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=org_id,total_points`,{headers:H}).then(r=>r.json());
+    orgs.forEach(o=>{const oe=allEmpsR.filter(e=>e.org_id===o.id);orgEmpMap[o.name]={count:oe.length,pts:oe.reduce((s,e)=>s+(e.total_points||0),0)};});
+    const maxPts=Math.max(...Object.values(orgEmpMap).map(x=>x.pts),1);
+    $('saOrgBar').innerHTML=`<div class="chart-bar-wrap">${Object.entries(orgEmpMap).map(([nm,d])=>`<div class="chart-bar-row"><div class="chart-bar-label">${nm}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round(d.pts/maxPts*100)}%"></div></div><div class="chart-bar-val">${d.pts}pts</div></div>`).join('')}</div>`;
+    // top performers
+    const top=await fetch(`${SB}/rest/v1/vailyf_employees?role=eq.employee&order=total_points.desc&limit=5&select=name,initials,department,total_points,streak`,{headers:H}).then(r=>r.json());
+    $('saTopPerf').innerHTML=`<div>${(top||[]).map((u,i)=>{const ini=u.initials||u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();return`<div class="lbr"><div class="lrk ${['gold','silver','bronze'][i]||''}">${['🥇','🥈','🥉'][i]||(i+1)}</div><div class="lav">${ini}</div><div class="ln">${u.name}<small>${u.department||''} ${u.streak>0?'· '+u.streak+'d streak':''}</small></div><div class="lpt">${u.total_points||0}</div></div>`;}).join('')}</div>`;}
+  catch(e){$('saDashStats').innerHTML='<p style="font-size:12px;color:var(--is);grid-column:span 4">Error loading.</p>';}
+}
+
+async function loadOrgs(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_organisations?order=created_at.desc`,{headers:H});const orgs=await r.json();
+  // count employees per org
+  const allE=await fetch(`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=org_id`,{headers:H}).then(r=>r.json());
+  const cmap={};(allE||[]).forEach(e=>{if(e.org_id)cmap[e.org_id]=(cmap[e.org_id]||0)+1;});
+  $('orgTable').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Organisation</th><th>City</th><th>Plan</th><th>Employees</th><th>Status</th><th>Actions</th></tr></thead><tbody>${(orgs||[]).map(o=>`<tr><td><strong>${o.name}</strong></td><td>${o.city||'–'}</td><td>${o.plan||'–'}</td><td>${cmap[o.id]||0}</td><td>${statusBadge(o.status)}</td><td class="flex-gap"><button class="btn bs bsm" onclick="toggleOrgStatus('${o.id}','${o.status}')">Toggle</button><button class="btn bda bsm" onclick="deleteOrg('${o.id}')">Delete</button></td></tr>`).join('')}</tbody></table></div>`;}
+  catch(e){$('orgTable').innerHTML='<p style="font-size:12px;color:var(--is)">Error.</p>';}
+}
+
+async function loadUsers(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_employees?order=name.asc&select=employee_id,name,department,role,plan,status,total_points,streak,org_id,wellness_score`,{headers:H});allUsers=await r.json();
+  const orgs=await fetch(`${SB}/rest/v1/vailyf_organisations?select=id,name`,{headers:H}).then(r=>r.json());
+  const omap={};(orgs||[]).forEach(o=>omap[o.id]=o.name);
+  // fill addUser org dropdown
+  const sel=$('auOrg'); sel.innerHTML='<option value="">None / Super Admin</option>';
+  (orgs||[]).forEach(o=>sel.innerHTML+=`<option value="${o.id}">${o.name}</option>`);
+  renderUsers(allUsers,omap);}
+  catch(e){$('userTable').innerHTML='<p style="font-size:12px;color:var(--is)">Error.</p>';}
+}
+let orgMapCache={};
+function renderUsers(users,omap){
+  if(omap)orgMapCache=omap;
+  else omap=orgMapCache;
+  $('userTable').innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Role</th><th>Plan</th><th>Org</th><th>Score</th><th>Points</th><th>Status</th><th>Actions</th></tr></thead><tbody>${users.map(u=>`<tr><td><code style="font-size:11px">${u.employee_id}</code></td><td>${u.name}</td><td>${u.department||'–'}</td><td>${roleBadge(u.role)}</td><td>${u.plan||'–'}</td><td>${u.org_id?(omap[u.org_id]||'–'):'–'}</td><td>${u.wellness_score||50}</td><td>${u.total_points||0}</td><td>${statusBadge(u.status||'active')}</td><td class="flex-gap"><button class="btn bs bsm" onclick="openEditUser('${u.employee_id}')">Edit</button><button class="btn bda bsm" onclick="quickDeleteUser('${u.employee_id}')">Del</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+function filterUsers(){const q=$('userSearch').value.toLowerCase();renderUsers(allUsers.filter(u=>(u.employee_id+u.name+(u.department||'')).toLowerCase().includes(q)));}
+
+async function openEditUser(eid){
+  const u=allUsers.find(x=>x.employee_id===eid);if(!u)return;
+  $('euOldId').value=u.employee_id;$('euId').value=u.employee_id;$('euNm').value=u.name;$('euDp').value=u.department||'';$('euRl').value=u.role;$('euPl').value=u.plan||'Basic';$('euSt').value=u.status||'active';
+  const orgs=await fetch(`${SB}/rest/v1/vailyf_organisations?select=id,name`,{headers:H}).then(r=>r.json());
+  $('euOrg').innerHTML='<option value="">None</option>'+(orgs||[]).map(o=>`<option value="${o.id}" ${u.org_id===o.id?'selected':''}>${o.name}</option>`).join('');
+  openModal('editUserModal');
+}
+async function saveEditUser(){
+  const old=$('euOldId').value;
+  try{await su2('vailyf_employees',{employee_id:$('euId').value.trim().toUpperCase(),name:$('euNm').value.trim(),department:$('euDp').value,role:$('euRl').value,plan:$('euPl').value,status:$('euSt').value,org_id:$('euOrg').value||null},{employee_id:old});
+  toast2('✅ User updated!');closeModal('editUserModal');loadUsers();}
+  catch(e){toast2('⚠️ Could not update.');}
+}
+async function quickDeleteUser(eid){if(!confirm('Delete user '+eid+'? This cannot be undone.'))return;
+  try{await sd('vailyf_employees',{employee_id:eid});toast2('🗑️ User deleted.');loadUsers();}catch(e){toast2('⚠️ Error.');}
+}
+
+async function loadReportFilters(){
+  try{const orgs=await fetch(`${SB}/rest/v1/vailyf_organisations?select=id,name`,{headers:H}).then(r=>r.json());
+  $('rptOrg').innerHTML='<option value="">All Organisations</option>'+(orgs||[]).map(o=>`<option value="${o.id}">${o.name}</option>`).join('');
+  loadReport();}catch(e){}
+}
+async function loadReport(){
+  try{const oid=$('rptOrg').value, eid=$('rptEmp').value;
+  // populate employee dropdown if org selected
+  if(oid){
+    const e=await fetch(`${SB}/rest/v1/vailyf_employees?org_id=eq.${oid}&role=eq.employee&select=employee_id,name`,{headers:H}).then(r=>r.json());
+    $('rptEmp').innerHTML='<option value="">All Employees</option>'+(e||[]).map(x=>`<option value="${x.employee_id}">${x.name}</option>`).join('');}
+  else{$('rptEmp').innerHTML='<option value="">All Employees</option>';}
+  // build report
+  let url=`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=employee_id,name,department,total_points,wellness_score,streak,plan`;
+  if(oid)url+=`&org_id=eq.${oid}`;
+  if(eid)url+=`&employee_id=eq.${eid}`;
+  url+='&order=total_points.desc';
+  const emps=await fetch(url,{headers:H}).then(r=>r.json());
+  if(!emps||!emps.length){$('reportOut').innerHTML='<div class="card"><p style="font-size:12px;color:var(--is)">No data found.</p></div>';return;}
+  // avg stats
+  const avgSc=Math.round(emps.reduce((s,e)=>s+(e.wellness_score||50),0)/emps.length);
+  const avgPt=Math.round(emps.reduce((s,e)=>s+(e.total_points||0),0)/emps.length);
+  const maxPts=Math.max(...emps.map(e=>e.total_points||0),1);
+  $('reportOut').innerHTML=`
+    <div class="sgrid4" style="margin-bottom:12px">
+      <div class="sc g"><div class="sl">Employees</div><div class="sv">${emps.length}</div></div>
+      <div class="sc am"><div class="sl">Avg Score</div><div class="sv">${avgSc}</div></div>
+      <div class="sc"><div class="sl">Avg Points</div><div class="sv">${avgPt}</div></div>
+      <div class="sc pu"><div class="sl">Top Score</div><div class="sv">${Math.max(...emps.map(e=>e.wellness_score||50))}</div></div>
+    </div>
+    <div class="card"><div class="ct"><span>📊</span>Points Ranking</div>
+      <div class="chart-bar-wrap">${emps.map(e=>`<div class="chart-bar-row"><div class="chart-bar-label" style="font-size:11px">${e.name.split(' ')[0]}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round((e.total_points||0)/maxPts*100)}%"></div></div><div class="chart-bar-val">${e.total_points||0}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="card"><div class="ct"><span>📋</span>Full Employee Report</div>
+    <div class="table-wrap"><table><thead><tr><th>Name</th><th>Dept</th><th>Plan</th><th>Score</th><th>Points</th><th>Streak</th></tr></thead>
+    <tbody>${emps.map(e=>`<tr><td>${e.name}</td><td>${e.department||'–'}</td><td>${e.plan||'–'}</td><td>${e.wellness_score||50}</td><td>${e.total_points||0}</td><td>${e.streak||0}d 🔥</td></tr>`).join('')}</tbody></table></div></div>`;}
+  catch(err){$('reportOut').innerHTML='<div class="card"><p style="font-size:12px;color:var(--is)">Error loading report.</p></div>';}
+}
+
+async function loadBodyReportFilters(){
+  try{const orgs=await fetch(`${SB}/rest/v1/vailyf_organisations?select=id,name`,{headers:H}).then(r=>r.json());
+  ['brOrg'].forEach(id=>{$(id).innerHTML='<option value="">All</option>'+(orgs||[]).map(o=>`<option value="${o.id}">${o.name}</option>`).join('');});
+  }catch(e){}
+}
+async function loadBodyEmpList(){
+  const oid=$('brOrg').value;
+  let url=`${SB}/rest/v1/vailyf_employees?role=eq.employee&select=employee_id,name`;
+  if(oid)url+=`&org_id=eq.${oid}`;
+  try{const e=await fetch(url,{headers:H}).then(r=>r.json());
+  $('brEmp').innerHTML='<option value="">Select employee…</option>'+(e||[]).map(x=>`<option value="${x.employee_id}">${x.name} (${x.employee_id})</option>`).join('');
+  }catch(e){}
+}
+async function loadBodyReport(){
+  const eid=$('brEmp').value;if(!eid){$('bodyRptOut').innerHTML='';return;}
+  try{
+    const [bps,emp]=await Promise.all([
+      fetch(`${SB}/rest/v1/vailyf_body_params?employee_id=eq.${eid}&order=recorded_date.asc`,{headers:H}).then(r=>r.json()),
+      fetch(`${SB}/rest/v1/vailyf_employees?employee_id=eq.${eid}&select=name,department,plan,wellness_score,total_points`,{headers:H}).then(r=>r.json())
+    ]);
+    const u=emp&&emp[0];
+    if(!bps||!bps.length){$('bodyRptOut').innerHTML=`<div class="card"><p style="font-size:12px;color:var(--is)">No body measurements for this employee yet.</p></div>`;return;}
+    const first=bps[0],latest=bps[bps.length-1];
+    const wDiff=first.weight_kg&&latest.weight_kg?(first.weight_kg-latest.weight_kg).toFixed(1):null;
+    const maxW=Math.max(...bps.filter(x=>x.weight_kg).map(x=>x.weight_kg),100);
+    $('bodyRptOut').innerHTML=`
+      <div class="card" style="background:linear-gradient(135deg,var(--g),var(--gl));color:#fff">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:4px">${u?u.name:'Employee'}</div>
+        <div style="font-size:12px;opacity:.85">${u?u.department:''} · ${eid}</div>
+        ${wDiff!==null?`<div style="margin-top:10px;font-size:13px;font-weight:600">${parseFloat(wDiff)>0?'📉 Lost':'📈 Gained'} <strong>${Math.abs(wDiff)} kg</strong> since first measurement</div>`:''}
+      </div>
+      <div class="card"><div class="ct"><span>⚖️</span>Weight Progress</div>
+        <div class="prog-chart">${bps.filter(b=>b.weight_kg).map(b=>`<div class="prog-row"><div class="prog-date">${b.recorded_date}</div><div class="prog-bar-t"><div class="prog-bar-f" style="width:${Math.round(b.weight_kg/maxW*100)}%"></div></div><div class="prog-val">${b.weight_kg}kg</div></div>`).join('')}</div>
+      </div>
+      <div class="card"><div class="ct"><span>📋</span>Full Measurement History</div>
+        <div class="table-wrap"><table><thead><tr><th>Date</th><th>Weight</th><th>BMI</th><th>Fat%</th><th>Waist</th><th>BP</th><th>HR</th><th>Notes</th></tr></thead>
+        <tbody>${bps.map(b=>`<tr><td>${b.recorded_date}</td><td>${b.weight_kg||'–'}</td><td>${b.bmi||'–'}</td><td>${b.body_fat_pct||'–'}%</td><td>${b.waist_cm||'–'}</td><td>${b.bp_systolic?b.bp_systolic+'/'+b.bp_diastolic:'–'}</td><td>${b.resting_hr||'–'}</td><td style="font-size:11px;color:var(--is)">${b.notes||''}</td></tr>`).join('')}
+        </tbody></table></div>
+      </div>`;}
+  catch(e){$('bodyRptOut').innerHTML='<div class="card"><p style="font-size:12px;color:var(--is)">Error loading.</p></div>';}
+}
+async function adminAddBody(){
+  const eid=$('brmEid').value.trim().toUpperCase();if(!eid){toast2('⚠️ Employee ID required');return;}
+  try{await si('vailyf_body_params',{employee_id:eid,recorded_date:new Date().toISOString().split('T')[0],weight_kg:parseFloat($('brmWt').value)||null,body_fat_pct:parseFloat($('brmBf').value)||null,waist_cm:parseFloat($('brmWa').value)||null,bp_systolic:parseInt($('brmBs').value)||null,bp_diastolic:parseInt($('brmBd').value)||null,resting_hr:parseInt($('brmHr').value)||null,notes:$('brmNo').value||null,recorded_by:CU.employee_id});
+  toast2('📏 Saved for '+eid+'!');['brmEid','brmWt','brmBf','brmWa','brmBs','brmBd','brmHr','brmNo'].forEach(i=>$(i).value='');
+  if($('brEmp').value===eid)loadBodyReport();}
+  catch(e){toast2('⚠️ Error: '+e.message);}
+}
+async function loadSaChall(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_challenges?order=created_at.desc`,{headers:H});const rows=await r.json();
+  $('saChallTable').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Name</th><th>Description</th><th>Duration</th><th>Prize</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>${(rows||[]).map(c=>`<tr><td><strong>${c.name}</strong></td><td style="font-size:11px">${c.description||'–'}</td><td>${c.duration||'–'}</td><td>${c.prize||'–'}</td><td>${c.status==='active'?'<span class="tag tag-g">Active</span>':c.status==='upcoming'?'<span class="tag tag-a">Upcoming</span>':'<span class="tag">Ended</span>'}</td>
+  <td class="flex-gap"><button class="btn bs bsm" onclick="toggleChall('${c.id}','${c.status}')">Toggle</button><button class="btn bda bsm" onclick="deleteChall('${c.id}')">Del</button></td></tr>`).join('')}
+  </tbody></table></div>`;}catch(e){$('saChallTable').innerHTML='<p style="font-size:12px;color:var(--is)">Error.</p>';}
+}
+async function saCreateChall(){const nm=$('cmNm').value.trim();if(!nm){toast2('⚠️ Name required');return;}
+  try{await si('vailyf_challenges',{name:nm,description:$('cmDe').value,duration:$('cmDu').value,prize:$('cmPr').value,status:'active',start_date:new Date().toISOString().split('T')[0]});
+  toast2('🏆 Challenge created!');closeModal('challModal');loadSaChall();}catch(e){toast2('⚠️ Error.');}
+}
+async function toggleChall(id,status){
+  const ns=status==='active'?'upcoming':'active';
+  try{await su2('vailyf_challenges',{status:ns},{id});toast2('✅ Updated!');loadSaChall();}catch(e){toast2('⚠️ Error.');}
+}
+async function deleteChall(id){if(!confirm('Delete this challenge?'))return;
+  try{await sd('vailyf_challenges',{id});toast2('🗑️ Deleted.');loadSaChall();}catch(e){toast2('⚠️ Error.');}
+}
+async function loadSaAnn(){
+  try{const r=await fetch(`${SB}/rest/v1/vailyf_announcements?order=created_at.desc&limit=20`,{headers:H});const rows=await r.json();
+  $('saAnnList').innerHTML=`<div class="card"><div class="ct"><span>📋</span>Recent Announcements</div>${(rows||[]).map(a=>`<div class="ni"><div class="nd"></div><div style="flex:1"><div class="nt"><strong>${a.title}</strong><br>${a.body}</div><div style="display:flex;justify-content:space-between;margin-top:2px"><span class="ntm">${timeAgo(a.created_at)} · by ${a.created_by}</span><button class="btn bda bsm" onclick="deleteAnn('${a.id}')">Del</button></div></div></div>`).join('')}</div>`;}
+  catch(e){}
+}
+async function saSendAnnounce(){const t=$('saAnTit').value.trim(),b=$('saAnBod').value.trim();
+  if(!t||!b){toast2('⚠️ Fill all fields');return;}
+  try{await si('vailyf_announcements',{title:t,body:b,created_by:CU.employee_id});toast2('📢 Broadcast sent!');$('saAnTit').value='';$('saAnBod').value='';loadSaAnn();loadAnnouncements();}
+  catch(e){toast2('⚠️ Error.');}
+}
+async function deleteAnn(id){if(!confirm('Delete this announcement?'))return;
+  try{await sd('vailyf_announcements',{id});toast2('🗑️ Deleted.');loadSaAnn();}catch(e){toast2('⚠️ Error.');}
+}
+async function addOrg(){const nm=$('moName').value.trim();if(!nm){toast2('⚠️ Name required');return;}
+  try{await si('vailyf_organisations',{name:nm,city:$('moCity').value,plan:$('moPlan').value,status:'active'});
+  toast2('🏢 Organisation added!');closeModal('orgModal');$('moName').value='';$('moCity').value='';loadOrgs();}catch(e){toast2('⚠️ Error.');}
+}
+async function toggleOrgStatus(id,status){const ns=status==='active'?'inactive':'active';
+  try{await su2('vailyf_organisations',{status:ns},{id});toast2('✅ Status updated!');loadOrgs();}catch(e){toast2('⚠️ Error.');}
+}
+async function deleteOrg(id){if(!confirm('Delete this organisation? Employees will be unlinked.'))return;
+  try{await su2('vailyf_employees',{org_id:null},{org_id:id});await sd('vailyf_organisations',{id});toast2('🗑️ Deleted.');loadOrgs();}catch(e){toast2('⚠️ Error.');}
+}
+async function saAddUser(){
+  const id=$('auId').value.trim().toUpperCase(),nm=$('auNm').value.trim(),pw=$('auPw').value;
+  if(!id||!nm||!pw){toast2('⚠️ ID, Name, Password required');return;}
+  try{const ini=nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  await si('vailyf_employees',{employee_id:id,password:pw,name:nm,department:$('auDp').value,role:$('auRl').value,plan:$('auPl').value,initials:ini,wellness_score:50,streak:0,total_points:0,status:'active',org_id:$('auOrg').value||null});
+  toast2('✅ User created!');closeModal('addUserModal');['auId','auNm','auDp','auPw'].forEach(i=>$(i).value='');loadUsers();}
+  catch(e){toast2('⚠️ ID may already exist.');}
+}
+async function lookupUser(){
+  const eid=$('rpEid').value.trim().toUpperCase();
+  if(eid.length<3){$('rpName').value='';return;}
+  try{const r=await sq('vailyf_employees',{employee_id:eid});
+  $('rpName').value=r&&r.length>0?r[0].name+' ('+r[0].role+')':'Not found';}catch(e){}
+}
+async function resetCredentials(){
+  const eid=$('rpEid').value.trim().toUpperCase();const nm=$('rpName').value;
+  if(!eid||nm.includes('Not found')){toast2('⚠️ Valid Employee ID required');return;}
+  const updates={};
+  if($('rpNewPw').value.length>=6)updates.password=$('rpNewPw').value;
+  if($('rpRole').value)updates.role=$('rpRole').value;
+  if($('rpNewId').value.trim())updates.employee_id=$('rpNewId').value.trim().toUpperCase();
+  if(!Object.keys(updates).length){toast2('⚠️ No changes entered');return;}
+  try{await su2('vailyf_employees',updates,{employee_id:eid});toast2('🔒 Credentials updated for '+eid+'!');$('rpEid').value='';$('rpName').value='';$('rpNewPw').value='';$('rpNewId').value='';$('rpRole').value='';}
+  catch(e){toast2('⚠️ Error: '+e.message);}
+}
+async function deleteUser(){
+  const eid=$('rpEid').value.trim().toUpperCase();const nm=$('rpName').value;
+  if(!eid||nm.includes('Not found')){toast2('⚠️ Look up a valid user first');return;}
+  if(!confirm('Permanently delete user '+eid+' ('+nm+')?\n\nThis will also delete their logs and body measurements.'))return;
+  try{await sd('vailyf_daily_logs',{employee_id:eid});await sd('vailyf_body_params',{employee_id:eid});await sd('vailyf_employees',{employee_id:eid});
+  toast2('🗑️ User '+eid+' deleted.');$('rpEid').value='';$('rpName').value='';}
+  catch(e){toast2('⚠️ Error: '+e.message);}
+}
+
+// Load HR stats when tab opens
+$('hrTab').addEventListener('click',()=>setTimeout(loadHrStats,100));
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('ls').classList.contains('active'))doLogin();});
+</script>
+</body>
+</html>
