@@ -60,13 +60,21 @@ footer strong{color:var(--gold);font-weight:600}
 footer a{color:#ffe29a;text-underline-offset:2px}
 #mute{position:fixed;bottom:14px;right:14px;z-index:5;width:40px;height:40px;border-radius:50%;
   border:1px solid var(--line);background:rgba(0,0,0,.45);color:#fff;font-size:17px;cursor:pointer}
-@media (prefers-reduced-motion:reduce){.wa{animation:none}}
+.cardwrap{position:relative;width:100%}
+#soundPill{white-space:nowrap;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 20px;border-radius:30px;
+  border:1px solid rgba(255,211,107,.7);background:rgba(10,12,40,.82);color:#ffe29a;font:600 15px 'Poppins',sans-serif;
+  cursor:pointer;box-shadow:0 0 30px rgba(245,166,35,.45);animation:pulse2 1.6s ease-in-out infinite}
+@keyframes pulse2{50%{box-shadow:0 0 50px rgba(245,166,35,.8)}}
+@media (prefers-reduced-motion:reduce){.wa,#soundPill{animation:none}}
 </style>
 </head>
 <body>
 <button id="mute" aria-label="Sound on or off">🔇</button>
 <main>
-  <canvas id="card" width="1080" height="1080" aria-label="Animated Diwali greeting"></canvas>
+  <div class="cardwrap">
+    <canvas id="card" width="1080" height="1080" aria-label="Animated Diwali greeting"></canvas>
+    <button id="soundPill">🔊 Tap for crackers &amp; music</button>
+  </div>
   <div class="tap">Tap the greeting to light a cracker 🎇</div>
 
   <section class="panel">
@@ -476,7 +484,7 @@ function draw(now) {
   revealText('Happy', cx - 30, 250, '118px ' + F.script, t, prog(t, .9, .8), 118);
   revealText('Diwali', cx + 10, 420, '196px ' + F.script, t, prog(t, 1.5, 1.0), 196);
   if (!diwaliBurst && t > 2.5) {
-    diwaliBurst = true;
+    diwaliBurst = true; sound.ladi();
     for (let i = 0; i < 4; i++) setTimeout(() => burst(rnd(480, 920), rnd(300, 420), COLORS[i], 40, 4), i * 120);
   }
   // sparkle twinkles on the title
@@ -518,30 +526,135 @@ cv.addEventListener('pointerdown', e => {
 });
 
 /* =========================================================
-   6. Sound (made in code; phones allow it after the first tap)
+   6. Sound: crackers + music (phones allow audio only after a tap)
+   Music: plays diwali/song.mp3 if you add one; otherwise an
+   original festive tune made in code (sitar, tanpura, tabla).
    ========================================================= */
 const sound = (() => {
-  let ac = null, on = false; const btn = $('mute');
-  function start() { if (ac) return; try { ac = new (window.AudioContext || window.webkitAudioContext)(); on = true; btn.textContent = '🔊'; } catch (e) {} }
-  addEventListener('pointerdown', start, { once: true });
-  btn.addEventListener('click', e => { e.stopPropagation(); start(); on = !on; btn.textContent = on ? '🔊' : '🔇'; });
-  return {
+  let ac = null, on = false, out, sfx, music, comp, recDest = null, noise = null;
+  let songEl = null, useSong = false, timer = null, step = 0, nextT = 0;
+  const btn = $('mute'), pill = $('soundPill');
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+
+  function start() {
+    if (ac) { if (ac.state === 'suspended') ac.resume(); return; }
+    try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    comp = ac.createDynamicsCompressor(); out = ac.createGain();
+    comp.connect(out); out.connect(ac.destination);
+    if (ac.createMediaStreamDestination) { recDest = ac.createMediaStreamDestination(); out.connect(recDest); }
+    sfx = ac.createGain(); sfx.gain.value = .9; sfx.connect(comp);
+    music = ac.createGain(); music.gain.value = .5; music.connect(comp);
+    noise = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
+    const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    on = true; ui(); startMusic();
+  }
+  function ui() { btn.textContent = on ? '🔊' : '🔇'; if (pill) pill.hidden = true; if (out) out.gain.value = on ? 1 : 0; }
+
+  /* ---- small building blocks ---- */
+  function env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
+  function noiseHit(t, dur, type, freq, peak, dest = sfx) {
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = noise; f.type = type; f.frequency.value = freq;
+    env(g, t, peak, .003, dur); s.connect(f).connect(g).connect(dest);
+    s.start(t, Math.random() * 1.5, dur + .05);
+  }
+  function tone(t, freq, type, peak, dur, dest, bendTo) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (bendTo) o.frequency.exponentialRampToValueAtTime(bendTo, t + dur);
+    env(g, t, peak, .004, dur); o.connect(g).connect(dest); o.start(t); o.stop(t + dur + .05);
+  }
+
+  /* ---- crackers ---- */
+  const fx = {
     whistle() {
       if (!on || !ac || Math.random() < .5) return;
-      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
-      o.frequency.setValueAtTime(rnd(900, 1300), t); o.frequency.exponentialRampToValueAtTime(rnd(2000, 2600), t + .9);
-      g.gain.setValueAtTime(.02, t); g.gain.exponentialRampToValueAtTime(.001, t + .9);
-      o.connect(g).connect(ac.destination); o.start(t); o.stop(t + .9);
+      const t = ac.currentTime; tone(t, rnd(900, 1300), 'sine', .03, .9, sfx, rnd(2000, 2600));
     },
     boom() {
       if (!on || !ac) return;
-      const t = ac.currentTime, len = 1.2, buf = ac.createBuffer(1, ac.sampleRate * len, ac.sampleRate), d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
-      const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-      s.buffer = buf; f.type = 'lowpass'; f.frequency.value = rnd(600, 1400);
-      g.gain.setValueAtTime(.45, t); g.gain.exponentialRampToValueAtTime(.001, t + len);
-      s.connect(f).connect(g).connect(ac.destination); s.start(t);
+      const t = ac.currentTime;
+      tone(t, 95, 'sine', .7, .55, sfx, 35);                       // deep thump
+      noiseHit(t, 1.1, 'lowpass', rnd(700, 1400), .55);              // blast
+      for (let i = 0; i < 22; i++)                                   // glitter crackle
+        noiseHit(t + .25 + Math.random() * .9, .025, 'highpass', 3000, rnd(.05, .18));
+    },
+    ladi(n = 26) {                                                   // chain of small crackers
+      if (!on || !ac) return;
+      let t = ac.currentTime;
+      for (let i = 0; i < n; i++) {
+        t += rnd(.04, .1);
+        noiseHit(t, .05, 'bandpass', rnd(900, 2200), rnd(.35, .6));
+        if (Math.random() < .3) tone(t, 160, 'sine', .25, .08, sfx, 60);
+      }
     }
+  };
+
+  /* ---- music ---- */
+  function startMusic() {
+    songEl = new Audio('song.mp3'); songEl.loop = true;
+    try { ac.createMediaElementSource(songEl).connect(music); } catch (e) {}
+    songEl.play().then(() => { useSong = true; }).catch(startSynth);
+  }
+
+  // Original tune in D (eighth notes; 0 = rest)
+  const MEL = [69,69,71,69,66,0,62,64, 66,66,69,66,64,0,0,0, 74,74,73,71,69,71,69,66, 64,66,64,62,62,0,0,0,
+               69,71,74,71,69,0,66,69, 66,69,71,74,71,0,69,0, 74,76,74,71,69,66,64,66, 62,0,66,0,62,0,0,0];
+  const TAAL = ['dha','ge','na','ti','na','ke','dhi','na'];          // Kaherwa
+  const EIGHTH = 60 / 112 / 2;
+
+  function sitar(t, m) {
+    const f = mtof(m), lp = ac.createBiquadFilter(), g = ac.createGain();
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(700, t + .45);
+    env(g, t, .22, .004, .6); lp.connect(g).connect(music);
+    [['sawtooth', 1], ['triangle', 1.003], ['sawtooth', 2.001]].forEach(([ty, k], i) => {
+      const o = ac.createOscillator(), og = ac.createGain();
+      o.type = ty; o.frequency.setValueAtTime(f * k * 1.012, t); o.frequency.exponentialRampToValueAtTime(f * k, t + .06);
+      og.gain.value = i === 2 ? .25 : .5; o.connect(og).connect(lp); o.start(t); o.stop(t + .7);
+    });
+  }
+  function tabla(t, bol) {
+    if (bol === 'dha' || bol === 'dhi' || bol === 'ge') tone(t, 150, 'sine', .55, .28, music, 60);
+    if (bol !== 'ge') { tone(t, bol === 'na' ? 720 : 880, 'sine', .14, .09, music); noiseHit(t, .04, 'bandpass', 2600, .12, music); }
+  }
+  function bell(t) { tone(t, 1318, 'sine', .07, 1.6, music); tone(t, 1977, 'sine', .035, 1.2, music); }
+  function drone() {
+    [50, 57, 62].forEach((m, i) => {
+      const o = ac.createOscillator(), g = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+      o.type = 'triangle'; o.frequency.value = mtof(m); g.gain.value = .035;
+      lfo.frequency.value = .25 + i * .07; lg.gain.value = .02; lfo.connect(lg).connect(g.gain);
+      o.connect(g).connect(music); o.start(); lfo.start();
+    });
+  }
+  function startSynth() {
+    if (timer) return;
+    drone(); step = 0; nextT = ac.currentTime + .1;
+    timer = setInterval(() => {
+      while (nextT < ac.currentTime + .15) {
+        const i = step % MEL.length;
+        if (i === 0) bell(nextT);
+        if (MEL[i]) sitar(nextT, MEL[i]);
+        tabla(nextT, TAAL[step % 8]);
+        nextT += EIGHTH; step++;
+      }
+    }, 25);
+  }
+
+  /* ---- controls ---- */
+  addEventListener('pointerdown', start, { once: true });
+  if (pill) pill.addEventListener('click', e => { e.stopPropagation(); start(); });
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (!ac) { start(); return; }
+    on = !on; ui();
+  });
+  document.addEventListener('visibilitychange', () => { if (ac) document.hidden ? ac.suspend() : ac.resume(); });
+
+  return {
+    ...fx,
+    ensure: start,
+    restartMusic() { if (!ac) return; if (useSong) songEl.currentTime = 0; else { step = 0; nextT = ac.currentTime + .05; } },
+    stream: () => recDest && recDest.stream
   };
 })();
 
@@ -607,21 +720,24 @@ $('shareImg').addEventListener('click', () => {
   }));
 });
 
-/* Video: record the animation playing for 8 seconds */
+/* Video: record the animation (with crackers and music) for 10 seconds */
 const vidType = window.MediaRecorder && cv.captureStream &&
-  ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m));
+  ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m));
 if (vidType) $('shareVid').hidden = false;
 $('shareVid').addEventListener('click', () => {
   const btn = $('shareVid'); btn.disabled = true;
-  const rec = new MediaRecorder(cv.captureStream(30), { mimeType: vidType, videoBitsPerSecond: 4e6 }), chunks = [];
+  sound.ensure();
+  const audio = sound.stream();
+  const stream = new MediaStream([...cv.captureStream(30).getVideoTracks(), ...(audio ? audio.getAudioTracks() : [])]);
+  const rec = new MediaRecorder(stream, { mimeType: vidType, videoBitsPerSecond: 4e6 }), chunks = [];
   rec.ondataavailable = e => e.data.size && chunks.push(e.data);
   rec.onstop = () => {
     btn.disabled = false; btn.textContent = '🎬 Share as animated video';
     const ext = vidType.includes('mp4') ? 'mp4' : 'webm';
     shareFile(new File(chunks, 'Diwali-greeting.' + ext, { type: vidType.split(';')[0] }));
   };
-  restart(); rec.start();
-  let left = 8; btn.textContent = '🎬 Recording… ' + left + 's';
+  restart(); sound.restartMusic(); rec.start();
+  let left = 10; btn.textContent = '🎬 Recording… ' + left + 's';
   const iv = setInterval(() => { left--; btn.textContent = '🎬 Recording… ' + left + 's'; if (!left) { clearInterval(iv); rec.stop(); } }, 1000);
 });
 $('shareLink').addEventListener('click', openWA);
