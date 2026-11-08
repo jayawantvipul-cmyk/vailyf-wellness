@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Diwali Wishes</title>
+<meta name="description" content="Someone special sent you Diwali wishes. Open to see them, then create your own in seconds.">
+<meta property="og:title" content="🪔 You've received special Diwali wishes!">
+<meta property="og:description" content="Tap to open your Diwali greeting and create your own.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#12051f">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Poppins:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#ffd36b; --gold2:#ff9f1c; --rose:#ff4f8b; --ink:#fff7e6;
+  --bg1:#12051f; --bg2:#2a0b3d; --muted:#d9c7a8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Poppins',sans-serif;color:var(--ink);
+  background:radial-gradient(ellipse at 50% 120%,#5a1a2e 0%,var(--bg2) 40%,var(--bg1) 80%);
+  min-height:100vh;overflow-x:hidden;
+}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:28px 16px 16px;text-align:center}
+
+/* ---------- greeting card ---------- */
+.card{width:100%;max-width:560px;margin:auto 0;padding:28px 20px 24px;border-radius:24px;
+  background:rgba(20,6,32,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  border:1px solid rgba(255,211,107,.25);box-shadow:0 0 60px rgba(255,159,28,.15)}
+.hindi{font-family:'Tiro Devanagari Hindi',serif;font-size:clamp(34px,10vw,58px);line-height:1.2;
+  background:linear-gradient(90deg,#fff2b3,var(--gold),var(--gold2),var(--gold),#fff2b3);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:hin 1.2s cubic-bezier(.2,1.4,.4,1) both,shine 3s linear 1.2s infinite;filter:drop-shadow(0 0 12px rgba(255,180,60,.55))}
+.title{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:clamp(30px,9vw,54px);
+  line-height:1.1;margin:6px 0 14px;color:var(--gold);
+  text-shadow:0 0 10px rgba(255,200,80,.8),0 0 30px rgba(255,120,40,.6)}
+.msg{font-size:clamp(16px,4.4vw,20px);line-height:1.6;color:var(--ink)}
+.msg b{color:var(--gold)}
+.from{margin-top:20px;font-size:clamp(15px,4vw,18px);color:var(--muted)}
+.sender{display:block;margin-top:4px;font-family:'Cinzel Decorative',serif;font-weight:700;
+  font-size:clamp(26px,8vw,44px);color:#fff;
+  text-shadow:0 0 8px #fff,0 0 20px var(--rose),0 0 40px var(--gold2)}
+
+/* kinetic letters */
+.k{display:inline-block;opacity:0;transform:translateY(40px) scale(.4) rotate(-12deg);
+  animation:pop .7s cubic-bezier(.2,1.6,.4,1) forwards}
+.kw{display:inline-block;white-space:nowrap}
+@keyframes pop{60%{opacity:1;transform:translateY(-6px) scale(1.15) rotate(3deg)}
+  100%{opacity:1;transform:none}}
+@keyframes hin{0%{opacity:0;transform:scale(2.5);filter:blur(10px)}100%{opacity:1;transform:none}}
+@keyframes shine{to{background-position:200% center}}
+.sender .k{animation:popGlow .9s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes popGlow{0%{opacity:0;transform:scale(3);filter:blur(8px)}
+  70%{opacity:1;transform:scale(.9);filter:blur(0)}100%{opacity:1;transform:none}}
+
+.diyas{font-size:28px;letter-spacing:10px;margin:16px 0 4px}
+.diyas span{display:inline-block;animation:flicker 1.4s ease-in-out infinite}
+.diyas span:nth-child(2){animation-delay:.3s}.diyas span:nth-child(3){animation-delay:.6s}
+.diyas span:nth-child(4){animation-delay:.9s}.diyas span:nth-child(5){animation-delay:1.2s}
+@keyframes flicker{50%{transform:scale(1.15);filter:drop-shadow(0 0 10px #ffb347)}}
+
+/* ---------- create-your-own ---------- */
+.create{width:100%;max-width:560px;margin-top:22px;padding:20px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,159,28,.18),rgba(255,79,139,.18));
+  border:1px solid rgba(255,211,107,.35)}
+.create h2{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.create p{font-size:13px;color:var(--muted);margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row input{flex:1 1 200px;min-width:0;padding:14px 16px;border-radius:14px;border:2px solid rgba(255,211,107,.5);
+  background:rgba(0,0,0,.35);color:#fff;font:600 16px 'Poppins',sans-serif;outline:none}
+.row input:focus{border-color:var(--gold)}
+.row input::placeholder{color:#bfae90;font-weight:400}
+.btn{flex:1 1 140px;padding:14px 18px;border:0;border-radius:14px;cursor:pointer;
+  font:700 16px 'Poppins',sans-serif;color:#2a0b00;
+  background:linear-gradient(135deg,#fff2b3,var(--gold),var(--gold2));
+  box-shadow:0 4px 20px rgba(255,159,28,.45);transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.wa{display:none;width:100%;margin-top:14px;padding:16px;border:0;border-radius:14px;cursor:pointer;
+  font:700 17px 'Poppins',sans-serif;color:#fff;background:#25D366;
+  box-shadow:0 4px 22px rgba(37,211,102,.5);animation:pulse 1.6s ease-in-out infinite}
+.wa.show{display:block}
+@keyframes pulse{50%{transform:scale(1.03);box-shadow:0 4px 32px rgba(37,211,102,.8)}}
+.hint{font-size:12px;color:var(--muted);margin-top:10px}
+.tap{font-size:12px;color:var(--muted);margin-top:14px;opacity:.8}
+
+/* ---------- footer ---------- */
+footer{width:100%;max-width:560px;margin-top:26px;padding-top:14px;border-top:1px solid rgba(255,211,107,.2);
+  font-size:11.5px;line-height:1.7;color:var(--muted)}
+footer strong{color:var(--gold);font-weight:600}
+footer a{color:#ffe29a;text-decoration:underline;text-underline-offset:2px}
+
+/* mute button */
+#mute{position:fixed;top:12px;right:12px;z-index:5;width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(255,211,107,.4);background:rgba(0,0,0,.4);color:#fff;font-size:18px;cursor:pointer}
+
+@media (prefers-reduced-motion:reduce){
+  .k,.sender .k{animation:none;opacity:1;transform:none}
+  .hindi,.diyas span,.wa{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<button id="mute" aria-label="Sound on or off">🔇</button>
+
+<main>
+  <section class="card" id="card">
+    <div class="hindi" id="hindi">शुभ दीपावली</div>
+    <h1 class="title kinetic">Happy Diwali</h1>
+    <p class="msg kinetic">to you and family. May God bless you and family with <b>Health</b>, <b>Wealth</b>, <b>Relationship</b> and <b>Happiness</b>.</p>
+    <div class="diyas"><span>🪔</span><span>🪔</span><span>🪔</span><span>🪔</span><span>🪔</span></div>
+    <div class="from" id="fromWrap">From –
+      <span class="sender" id="sender"></span>
+    </div>
+  </section>
+
+  <section class="create">
+    <h2 id="createTitle">✨ Send this greeting with your name</h2>
+    <p>Type your name, then forward it on WhatsApp to family and friends.</p>
+    <form class="row" id="form" autocomplete="off">
+      <input id="name" maxlength="30" placeholder="Enter your name" aria-label="Your name" required>
+      <button class="btn" type="submit">Create 🎆</button>
+    </form>
+    <button class="wa" id="wa">Share on WhatsApp</button>
+    <div class="hint" id="hint"></div>
+  </section>
+
+  <div class="tap">Tap anywhere to light a cracker 🎇</div>
+
+  <footer>
+    From <strong>Dr. Vaishnavi Jayawant</strong><br>
+    Homoeopathy Doctor · Director – VAILYF AI · Life Coach and Author<br>
+    <a href="https://www.vailyfai.com" target="_blank" rel="noopener">www.vailyfai.com</a><br>
+    Free ebook – <em>Circle of Happiness</em>:
+    <a href="https://fb.me/4lxJTa6Kt" target="_blank" rel="noopener">fb.me/4lxJTa6Kt</a><br>
+    Message “Hi” on
+    <a href="https://wa.me/917710874111?text=Hi" target="_blank" rel="noopener">7710874111</a>
+  </footer>
+</main>
+
+<script>
+/* ===== Name from link (?from=Name) — this powers the referral loop ===== */
+const params = new URLSearchParams(location.search);
+const clean = s => (s || '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 30);
+let sender = clean(params.get('from'));
+
+const $ = id => document.getElementById(id);
+const senderEl = $('sender'), fromWrap = $('fromWrap');
+
+/* ===== Kinetic text: split into letters, stagger them in ===== */
+let delay = 0;
+function kinetic(el, step) {
+  const nodes = [...el.childNodes];
+  el.textContent = '';
+  nodes.forEach(n => {
+    const isBold = n.nodeType === 1;
+    const holder = isBold ? document.createElement(n.tagName) : el;
+    if (isBold) el.appendChild(holder);
+    (n.textContent).split(/(\s+)/).forEach(word => {
+      if (!word) return;
+      if (/^\s+$/.test(word)) { holder.appendChild(document.createTextNode(' ')); return; }
+      const w = document.createElement('span'); w.className = 'kw';
+      // Hindi: animate whole word so letters stay joined
+      const parts = /[ऀ-ॿ]/.test(word) ? [word] : [...word];
+      parts.forEach(ch => {
+        const s = document.createElement('span');
+        s.className = 'k'; s.textContent = ch;
+        s.style.animationDelay = (delay += step).toFixed(2) + 's';
+        w.appendChild(s);
+      });
+      holder.appendChild(w);
+    });
+  });
+}
+function playText() {
+  delay = 0.6;
+  const h = $('hindi'); h.style.animation = 'none'; void h.offsetWidth; h.style.animation = '';
+  document.querySelectorAll('.kinetic').forEach((el, i) => {
+    if (!el.dataset.src) el.dataset.src = el.innerHTML;
+    el.innerHTML = el.dataset.src;
+    kinetic(el, i === 0 ? 0.06 : 0.012);
+  });
+  showSender();
+}
+function showSender() {
+  fromWrap.style.display = sender ? '' : 'none';
+  senderEl.textContent = '';
+  [...sender].forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.className = 'k'; s.textContent = ch === ' ' ? ' ' : ch;
+    s.style.animationDelay = (delay + 0.4 + i * 0.09).toFixed(2) + 's';
+    senderEl.appendChild(s);
+  });
+}
+
+/* ===== Create + share ===== */
+function shareLink(name) {
+  return location.origin + location.pathname + '?from=' + encodeURIComponent(name);
+}
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = clean($('name').value);
+  if (!name) return;
+  sender = name;
+  history.replaceState(null, '', shareLink(name));
+  playText();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  for (let i = 0; i < 6; i++) setTimeout(() => launch(), i * 250);
+  $('wa').classList.add('show');
+  $('wa').textContent = 'Share on WhatsApp as ' + name;
+  $('hint').textContent = 'Your personal greeting is ready. Tap the green button to forward it.';
+  $('createTitle').textContent = '🎉 Your greeting is ready!';
+});
+$('wa').addEventListener('click', () => {
+  const text =
+    '🪔✨ *' + sender + '* has sent you special Diwali wishes!\n\n' +
+    'Open your greeting 👇\n' + shareLink(sender) +
+    '\n\n🎆 Then add your name and send it to your loved ones!';
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+});
+if (sender) $('createTitle').textContent = '✨ ' + sender + ' wished you! Now send your own';
+
+/* ===== Fireworks ===== */
+const cv = $('fx'), cx = cv.getContext('2d');
+let W, H, dpr;
+function size() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+size(); addEventListener('resize', size);
+
+const rockets = [], sparks = [];
+const palette = ['#ffd36b', '#ff9f1c', '#ff4f8b', '#7cf9ff', '#b388ff', '#7dff9a', '#ffffff', '#ff5e3a'];
+const rnd = (a, b) => a + Math.random() * (b - a);
+
+function launch(tx, ty) {
+  tx = tx ?? rnd(W * .15, W * .85);
+  ty = ty ?? rnd(H * .12, H * .45);
+  const x = rnd(W * .3, W * .7), y = H;
+  const t = rnd(55, 75);
+  rockets.push({ x, y, vx: (tx - x) / t, vy: (ty - y) / t, life: t, color: palette[Math.random() * palette.length | 0] });
+  sound.whistle();
+}
+function explode(r) {
+  const n = rnd(70, 120) | 0, type = Math.random();
+  const c2 = palette[Math.random() * palette.length | 0];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2;
+    let sp = type < .35 ? rnd(2, 6) : type < .7 ? 5 : rnd(1, 7);   // peony / ring / chaos
+    if (type >= .35 && type < .7) sp *= rnd(.95, 1.05);
+    sparks.push({ x: r.x, y: r.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+      life: rnd(55, 90), max: 90, color: i % 3 ? r.color : c2, glit: Math.random() < .3 });
+  }
+  sound.boom();
+}
+function frame() {
+  cx.globalCompositeOperation = 'destination-out';
+  cx.fillStyle = 'rgba(0,0,0,.18)';
+  cx.fillRect(0, 0, W, H);
+  cx.globalCompositeOperation = 'lighter';
+  for (let i = rockets.length - 1; i >= 0; i--) {
+    const r = rockets[i];
+    r.x += r.vx; r.y += r.vy;
+    cx.fillStyle = '#ffe9b0';
+    cx.beginPath(); cx.arc(r.x, r.y, 2.2, 0, 7); cx.fill();
+    sparks.push({ x: r.x, y: r.y, vx: rnd(-.4, .4), vy: rnd(.5, 1.5), life: 18, max: 18, color: '#ffb347' });
+    if (--r.life <= 0) { explode(r); rockets.splice(i, 1); }
+  }
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const p = sparks[i];
+    p.vx *= .98; p.vy = p.vy * .98 + .06;
+    p.x += p.vx; p.y += p.vy;
+    const a = Math.max(p.life / p.max, 0);
+    if (p.glit && Math.random() < .3) continue;
+    cx.globalAlpha = a;
+    cx.fillStyle = p.color;
+    cx.beginPath(); cx.arc(p.x, p.y, 1.8 * a + .6, 0, 7); cx.fill();
+    if (--p.life <= 0) sparks.splice(i, 1);
+  }
+  cx.globalAlpha = 1;
+  requestAnimationFrame(frame);
+}
+frame();
+function auto() {
+  if (!document.hidden) launch();
+  setTimeout(auto, rnd(500, 1300));
+}
+setTimeout(auto, 300);
+addEventListener('pointerdown', e => {
+  if (e.target.closest('input,button,a')) return;
+  launch(e.clientX, e.clientY);
+});
+
+/* ===== Sound (made in code, starts after first tap) ===== */
+const sound = (() => {
+  let ac = null, on = false;
+  const btn = $('mute');
+  function start() {
+    if (ac) return;
+    try { ac = new (window.AudioContext || window.webkitAudioContext)(); on = true; btn.textContent = '🔊'; } catch (e) {}
+  }
+  addEventListener('pointerdown', start, { once: true });
+  btn.addEventListener('click', e => {
+    e.stopPropagation(); start();
+    on = !on; btn.textContent = on ? '🔊' : '🔇';
+  });
+  return {
+    whistle() {
+      if (!on || !ac || Math.random() < .5) return;
+      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
+      o.type = 'sine';
+      o.frequency.setValueAtTime(rnd(900, 1300), t);
+      o.frequency.exponentialRampToValueAtTime(rnd(2000, 2600), t + 1);
+      g.gain.setValueAtTime(.025, t); g.gain.exponentialRampToValueAtTime(.001, t + 1);
+      o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 1);
+    },
+    boom() {
+      if (!on || !ac) return;
+      const t = ac.currentTime, len = 1.2;
+      const buf = ac.createBuffer(1, ac.sampleRate * len, ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buf; f.type = 'lowpass'; f.frequency.value = rnd(600, 1400);
+      g.gain.setValueAtTime(.5, t); g.gain.exponentialRampToValueAtTime(.001, t + len);
+      src.connect(f).connect(g).connect(ac.destination); src.start(t);
+    }
+  };
+})();
+
+playText();
+</script>
+</body>
+</html>
