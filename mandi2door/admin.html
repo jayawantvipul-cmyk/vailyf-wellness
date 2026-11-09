@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandi2Door Admin</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#13201a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<style>
+:root{--g:#1a7a4a;--g2:#25a862;--gp:#e8f6ee;--al:#fff6e0;--rd:#d93025;--ink:#13201a;--mut:#5b6b62;--bd:#dde9e1;--bg:#f5f8f6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;padding:9px 10px;border:1.5px solid var(--bd);border-radius:9px;background:#fff;color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:10}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:980px;margin:0 auto}
+.hrow b{font-size:17px}
+.tabs{display:flex;gap:6px;overflow-x:auto;max-width:980px;margin:10px auto 0;scrollbar-width:none}
+.tabs button{flex:none;padding:7px 13px;border-radius:18px;background:rgba(255,255,255,.1);color:#cfe;font-weight:600;font-size:13px}
+.tabs button.on{background:#fff;color:var(--ink)}
+main{max-width:980px;margin:0 auto;padding:14px 16px 60px}
+.view{display:none}.view.on{display:block}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px}
+.kpi small{color:var(--mut);font-size:12px;font-weight:600}.kpi div{font-size:21px;font-weight:800;margin-top:2px}
+.kpi.hi{background:var(--gp);border-color:#bfe3cd}.kpi.am{background:var(--al);border-color:#f3d27a}
+.panel{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px;overflow-x:auto}
+.panel h3{font-size:15px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;color:var(--mut);font-size:12px;font-weight:700;padding:6px;border-bottom:1.5px solid var(--bd);white-space:nowrap}
+td{padding:7px 6px;border-bottom:1px solid #eef3f0;vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+.pt input{width:68px;padding:6px;text-align:right}
+.pt td{vertical-align:middle}
+.btn{background:var(--g);color:#fff;font-weight:700;padding:10px 16px;border-radius:10px;text-decoration:none;display:inline-block}
+.btn.alt{background:#fff;color:var(--g);border:1.5px solid var(--g)}.btn.wa{background:#25d366}
+.sm{font-size:12px;font-weight:700;padding:5px 9px;border-radius:7px;border:1.5px solid var(--bd);background:#fff}
+.sm.on{background:var(--g);border-color:var(--g);color:#fff}
+.wing{font-weight:800;margin:14px 0 6px;color:var(--g)}
+.stop{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.stop .t{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.stop .i{font-size:13px;color:var(--mut);margin:4px 0 8px;line-height:1.5}
+.stop.done{opacity:.55}
+.pill{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--gp);color:var(--g)}
+.pill.am{background:var(--al);color:#8a5300}
+.muted{color:var(--mut);font-size:12.5px}
+.login{max-width:340px;margin:80px auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:24px;text-align:center}
+.login input{width:100%;margin:14px 0;text-align:center;font-size:20px;letter-spacing:4px}
+.warn{color:#8a5300}.bad{color:var(--rd);font-weight:700}
+.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:60;display:none}
+</style>
+</head>
+<body>
+<div id="loginv" class="login">
+  <div style="font-size:40px">📋</div><h2>Mandi2Door Admin</h2>
+  <p class="muted" id="lhint"></p>
+  <input id="pin" type="password" inputmode="numeric" placeholder="••••">
+  <button class="btn" id="lgo" style="width:100%">Log in</button>
+</div>
+
+<div id="app" hidden>
+<header>
+  <div class="hrow"><b>📋 Mandi2Door Admin</b>
+    <label class="muted" style="color:#cfe">Delivery date <input type="date" id="date" style="padding:5px 7px"></label></div>
+  <div class="tabs" id="tabs">
+    <button data-v="today" class="on">📊 Today</button><button data-v="buy">🛒 Buy list</button>
+    <button data-v="route">🚚 Delivery</button><button data-v="prices">💰 Prices</button>
+    <button data-v="subs">🥛 Subscriptions</button><button data-v="costs">⚙️ Costs</button>
+  </div>
+</header>
+<main>
+  <section class="view on" id="v-today"></section>
+  <section class="view" id="v-buy"></section>
+  <section class="view" id="v-route"></section>
+  <section class="view" id="v-prices"></section>
+  <section class="view" id="v-subs"></section>
+  <section class="view" id="v-costs"></section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+const {C,LS,api,rupee,esc,saving,subOn,nextDeliveryDate,waLink,ymd,parseYmd,addDays,COMPARE,COMPARE_LABEL}=M2D;
+const $=s=>document.querySelector(s);
+let key="", products=[], orders=[], subs=[], view="today";
+let costs=LS.get("costs",{staff:600,transport:700,wastagePct:4,misc:100});
+const byId=id=>products.find(p=>p.id===id);
+const fmt=s=>parseYmd(s).toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"});
+function toast(m){const e=$("#toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2200)}
+
+// One "stop" per flat: that day's orders + subscription items.
+function stopsFor(date){
+  const m={};
+  const get=(w,f,name,phone)=>m[w+"-"+f]||(m[w+"-"+f]={wing:w,flat:f,name,phone,orders:[],subItems:[]});
+  orders.filter(o=>o.status!=="cancelled").forEach(o=>get(o.wing,o.flat,o.name,o.phone).orders.push(o));
+  subs.filter(s=>subOn(s,date)).forEach(s=>{const p=byId(s.productId); if(!p)return;
+    get(s.wing,s.flat,s.name,s.phone).subItems.push({id:p.id,name:p.en,unit:p.unit,qty:s.qty,price:p.price,cost:p.cost,save:saving(p)})});
+  return Object.values(m).sort((a,b)=>a.wing.localeCompare(b.wing,undefined,{numeric:true})||a.flat.localeCompare(b.flat,undefined,{numeric:true}));
+}
+function numbers(date){
+  const stops=stopsFor(date); let rev=0,cost=0,fees=0,sav=0,collect=0,paid=0,units={};
+  stops.forEach(s=>{
+    s.orders.forEach(o=>{fees+=o.fee;sav+=o.savings;collect+=o.total;if(o.payment==="paid")paid+=o.total;
+      o.items.forEach(i=>{rev+=i.price*i.qty;cost+=i.cost*i.qty;(units[i.id]=units[i.id]||{q:0,name:i.name,unit:i.unit,cost:i.cost}).q+=i.qty})});
+    s.subItems.forEach(i=>{rev+=i.price*i.qty;cost+=i.cost*i.qty;sav+=i.save*i.qty;(units[i.id]=units[i.id]||{q:0,name:i.name,unit:i.unit,cost:i.cost}).q+=i.qty});
+  });
+  const wastage=cost*costs.wastagePct/100, fixed=costs.staff+costs.transport+costs.misc;
+  const gross=rev+fees-cost-wastage, net=gross-fixed;
+  return {stops,rev,cost,fees,sav,collect,paid,units,wastage,fixed,gross,net,orders:orders.filter(o=>o.status!=="cancelled").length};
+}
+
+function renderToday(){
+  const d=$("#date").value, x=numbers(d);
+  $("#v-today").innerHTML=`
+  <div class="kpis">
+    <div class="kpi"><small>Orders</small><div>${x.orders}</div></div>
+    <div class="kpi"><small>Flats to deliver</small><div>${x.stops.length}</div></div>
+    <div class="kpi"><small>Sales (incl. milk subs)</small><div>${rupee(x.rev+x.fees)}</div></div>
+    <div class="kpi"><small>Buying cost</small><div>${rupee(x.cost)}</div></div>
+    <div class="kpi hi"><small>Gross profit</small><div>${rupee(x.gross)}</div></div>
+    <div class="kpi ${x.net>=0?"hi":"am"}"><small>Net after staff & transport</small><div>${rupee(x.net)}</div></div>
+    <div class="kpi am"><small>Customers saved</small><div>${rupee(x.sav)}</div></div>
+    <div class="kpi"><small>UPI collected</small><div>${rupee(x.paid)} <span class="muted">/ ${rupee(x.collect)}</span></div></div>
+  </div>
+  <div class="panel"><h3>Profit breakdown · ${fmt(d)}</h3><table>
+    <tr><td>Item sales</td><td class="n">${rupee(x.rev)}</td></tr>
+    <tr><td>Delivery fees</td><td class="n">${rupee(x.fees)}</td></tr>
+    <tr><td>− Buying cost (APMC/dairy)</td><td class="n">${rupee(x.cost)}</td></tr>
+    <tr><td>− Wastage (${costs.wastagePct}% of cost)</td><td class="n">${rupee(x.wastage)}</td></tr>
+    <tr><td><b>Gross profit</b> (${x.rev?Math.round(x.gross/(x.rev+x.fees)*100):0}%)</td><td class="n"><b>${rupee(x.gross)}</b></td></tr>
+    <tr><td>− Delivery staff, transport, misc.</td><td class="n">${rupee(x.fixed)}</td></tr>
+    <tr><td><b>Net profit today</b></td><td class="n ${x.net<0?"bad":""}"><b>${rupee(x.net)}</b></td></tr>
+  </table>
+  ${x.net<0?`<p class="muted warn" style="margin-top:8px">Below break-even. You need about ${rupee(Math.max(0,x.fixed-x.gross))} more gross profit, roughly ${Math.ceil(Math.max(0,x.fixed-x.gross)/30)} more orders at ₹30 profit each.</p>`:""}</div>`;
+}
+
+function renderBuy(){
+  const d=$("#date").value, x=numbers(d);
+  const rows=Object.entries(x.units).sort((a,b)=>a[1].name.localeCompare(b[1].name));
+  const list=rows.map(([id,u])=>`• ${u.name} (${u.unit}) × ${u.q}`).join("\n");
+  $("#v-buy").innerHTML=`<div class="panel"><h3>APMC / dairy buy list · ${fmt(d)}</h3>
+  <p class="muted" style="margin-bottom:8px">Total of all orders and milk subscriptions. Buy 3–5% extra veg for damage and weight loss.</p>
+  ${rows.length?`<table><tr><th>Item</th><th>Pack</th><th class="n">Qty</th><th class="n">Est. cost</th></tr>
+  ${rows.map(([id,u])=>`<tr><td>${esc(u.name)}</td><td>${esc(u.unit)}</td><td class="n"><b>${u.q}</b></td><td class="n">${rupee(u.cost*u.q)}</td></tr>`).join("")}
+  <tr><td colspan="3"><b>Total cash needed</b></td><td class="n"><b>${rupee(x.cost)}</b></td></tr></table>
+  <p style="margin-top:12px"><a class="btn wa" target="_blank" rel="noopener" href="${waLink(`*Mandi2Door buy list ${fmt(d)}*\n${list}\nCash: ${rupee(x.cost)}`,"")}">Share on WhatsApp</a></p>`
+  :`<p class="muted">No orders yet for this date.</p>`}</div>`;
+}
+
+function renderRoute(){
+  const d=$("#date").value, x=numbers(d); let lastWing="";
+  const due=s=>s.orders.reduce((a,o)=>a+(o.payment==="paid"?0:o.total),0);
+  const text=x.stops.map(s=>`${s.wing}-${s.flat} ${s.name}: `+[...s.orders.flatMap(o=>o.items),...s.subItems].map(i=>`${i.name} ${i.unit}×${i.qty}`).join(", ")+(due(s)?` | COLLECT ₹${due(s)}`:"")).join("\n");
+  $("#v-route").innerHTML=`<div class="row"><a class="btn wa" target="_blank" rel="noopener" href="${waLink(`*Delivery list ${fmt(d)} (${C.DELIVERY_SLOT})*\n${text}`,"")}">Send list to delivery person</a>
+   <span class="muted">${x.stops.length} flats · collect ${rupee(x.collect-x.paid)}</span></div>`+
+  (x.stops.map(s=>{
+    const head=s.wing!==lastWing?`<div class="wing">Building ${esc(s.wing)}</div>`:""; lastWing=s.wing;
+    const done=s.orders.length&&s.orders.every(o=>o.status==="delivered");
+    const items=[...s.orders.flatMap(o=>o.items),...s.subItems.map(i=>({...i,sub:1}))];
+    return head+`<div class="stop ${done?"done":""}"><div class="t"><span>${esc(s.wing)}-${esc(s.flat)} · ${esc(s.name)}</span>
+      <a href="tel:${esc(s.phone)}" class="muted">📞 ${esc(s.phone)}</a></div>
+      <div class="i">${items.map(i=>`${esc(i.name)} ${esc(i.unit)} ×${i.qty}${i.sub?" 🥛":""}`).join(" · ")}
+      ${s.orders.map(o=>o.note?`<br>📝 ${esc(o.note)}`:"").join("")}</div>
+      ${s.orders.map(o=>`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px">
+        <span class="muted">${o.id} · ${rupee(o.total)}</span>
+        <button class="sm ${o.status==="delivered"?"on":""}" data-del="${o.id}">${o.status==="delivered"?"✓ Delivered":"Mark delivered"}</button>
+        <button class="sm ${o.payment==="paid"?"on":""}" data-paid="${o.id}">${o.payment==="paid"?"✓ Paid":"Mark paid"}</button>
+        <button class="sm" data-cx="${o.id}" style="color:var(--rd)">Cancel</button></div>`).join("")}
+      ${!s.orders.length?`<span class="pill">Milk subscription only · billed monthly</span>`:""}</div>`}).join("")||`<p class="muted">No deliveries for this date.</p>`);
+}
+
+function renderPrices(){
+  const cell=(p,k)=>`<input type="number" step="0.5" min="0" data-pid="${p.id}" data-k="${k}" value="${p[k]}">`;
+  $("#v-prices").innerHTML=`<div class="row"><button class="btn" id="psave">Save prices</button>
+   <button class="btn alt" id="pexp">Export CSV</button><label class="btn alt">Import CSV<input type="file" id="pimp" accept=".csv" hidden></label>
+   <button class="btn alt" id="padd">+ Add item</button></div>
+   <p class="muted" style="margin-bottom:8px">Check Blinkit, Instamart, Zepto and the local vendor each morning and type their prices. Savings shown to residents are measured against the <b>cheapest</b> of these, so your claims are always fair.</p>
+   <div class="panel"><table class="pt"><tr><th>On</th><th>Item</th><th class="n">Your price</th><th class="n">Cost</th>${COMPARE.map(k=>`<th class="n">${COMPARE_LABEL[k]}</th>`).join("")}<th class="n">Margin</th><th class="n">Saves</th></tr>
+   ${products.map(p=>{const mg=p.price?Math.round((p.price-p.cost)/p.price*100):0;
+     return `<tr><td><input type="checkbox" data-pid="${p.id}" data-k="active" ${p.active!==false?"checked":""} style="width:auto"></td>
+     <td>${p.emoji} ${esc(p.en)}<div class="muted">${esc(p.unit)}</div></td>
+     <td class="n">${cell(p,"price")}</td><td class="n">${cell(p,"cost")}</td>${COMPARE.map(k=>`<td class="n">${cell(p,k)}</td>`).join("")}
+     <td class="n ${mg<10?"bad":""}">${mg}%</td><td class="n">${rupee(saving(p))}</td></tr>`}).join("")}</table></div>`;
+}
+
+function renderSubs(){
+  const today=ymd(new Date()), m0=today.slice(0,8)+"01";
+  const active=subs.filter(s=>s.status!=="cancelled");
+  const bills={};
+  active.forEach(s=>{const p=byId(s.productId); if(!p)return;
+    for(let d=m0; d<=today; d=addDays(d,1)) if(subOn(s,d)){const k=s.wing+"-"+s.flat;(bills[k]=bills[k]||{s,amt:0,days:new Set()}).amt+=p.price*s.qty;bills[k].days.add(d)}});
+  $("#v-subs").innerHTML=`<div class="panel"><h3>Active subscriptions (${active.filter(s=>s.status==="active").length})</h3>
+   ${active.length?`<table><tr><th>Flat</th><th>Name</th><th>Item</th><th class="n">Qty</th><th>Days</th><th>Status</th></tr>
+   ${active.map(s=>{const p=byId(s.productId)||{en:s.productId,unit:""};return `<tr><td>${esc(s.wing)}-${esc(s.flat)}</td><td>${esc(s.name)}</td><td>${esc(p.en)} ${esc(p.unit)}</td><td class="n">${s.qty}</td>
+   <td>${s.freq==="daily"?"Daily":s.freq==="alt"?"Alternate":String(s.days).split(",").map(i=>"SMTWTFS"[i]).join(" ")}</td><td><span class="pill ${s.status==="active"?"":"am"}">${s.status}</span></td></tr>`}).join("")}</table>`:`<p class="muted">None yet.</p>`}</div>
+   <div class="panel"><h3>Month-to-date milk bills</h3><p class="muted" style="margin-bottom:8px">Subscriptions are billed monthly by UPI, the way a regular milkman works. Tap to send the bill on WhatsApp.</p>
+   ${Object.keys(bills).length?`<table><tr><th>Flat</th><th>Name</th><th class="n">Days</th><th class="n">Amount</th><th></th></tr>
+   ${Object.entries(bills).map(([k,b])=>`<tr><td>${esc(k)}</td><td>${esc(b.s.name)}</td><td class="n">${b.days.size}</td><td class="n"><b>${rupee(b.amt)}</b></td>
+   <td><a class="sm" target="_blank" rel="noopener" href="${waLink(`Namaste ${b.s.name}, your Mandi2Door milk bill till ${fmt(today)} is ₹${b.amt}. Pay by UPI: ${C.UPI_ID}. Thank you! 🙏`,"91"+b.s.phone)}">WhatsApp bill</a></td></tr>`).join("")}</table>`:`<p class="muted">No deliveries yet this month.</p>`}</div>`;
+}
+
+function renderCosts(){
+  const f=(k,l,h)=>`<label style="display:block;margin-bottom:12px"><b>${l}</b><div class="muted">${h}</div><input type="number" data-cost="${k}" value="${costs[k]}" style="margin-top:4px;width:160px"></label>`;
+  $("#v-costs").innerHTML=`<div class="panel"><h3>Daily running costs</h3>
+   ${f("staff","Delivery person (₹/day)","₹15,000–18,000/month salary ÷ 30")}
+   ${f("transport","APMC transport (₹/day)","Tempo or auto for the early-morning APMC trip")}
+   ${f("wastagePct","Wastage (% of buying cost)","Damaged or unsold veg. Aim for under 3% because you buy against confirmed orders.")}
+   ${f("misc","Bags, crates, phone, misc. (₹/day)","")}
+   <button class="btn" id="csave">Save</button></div>
+   <div class="panel"><h3>Mode</h3><p class="muted">${M2D.demo?"DEMO mode: orders are stored only in this browser. Connect a Google Sheet (see README) to go live.":"LIVE: connected to Google Sheet."}</p></div>`;
+}
+
+const R={today:renderToday,buy:renderBuy,route:renderRoute,prices:renderPrices,subs:renderSubs,costs:renderCosts};
+async function load(){
+  const d=$("#date").value;
+  try{
+    const [pr,o,s]=await Promise.all([api.products(),api.admin.orders(key,d),api.admin.subs(key)]);
+    products=pr.products.map(p=>{["price","cost",...COMPARE].forEach(k=>p[k]=Number(p[k])||0);return p});
+    orders=o; subs=s;
+  }catch(e){toast("Load failed: "+e.message)}
+  R[view]();
+}
+function csv(){
+  const cols=["id","cat","emoji","en","mr","hi","unit","price","cost",...COMPARE,"active"];
+  const q=v=>/[",\n]/.test(String(v))?`"${String(v).replace(/"/g,'""')}"`:v;
+  return [cols.join(","),...products.map(p=>cols.map(c=>q(p[c]??"")).join(","))].join("\n");
+}
+function parseCsv(txt){
+  const rows=[];let row=[],cur="",inq=false;
+  for(let i=0;i<txt.length;i++){const ch=txt[i];
+    if(inq){if(ch=='"'&&txt[i+1]=='"'){cur+='"';i++}else if(ch=='"')inq=false;else cur+=ch}
+    else if(ch=='"')inq=true;else if(ch==","){row.push(cur);cur=""}else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&txt[i+1]=="\n")i++;row.push(cur);rows.push(row);row=[];cur=""}else cur+=ch}
+  if(cur||row.length){row.push(cur);rows.push(row)}
+  const [h,...b]=rows.filter(r=>r.join("").trim());
+  return b.map(r=>{const o={};h.forEach((k,i)=>o[k.trim()]=r[i]);
+    ["price","cost",...COMPARE].forEach(k=>o[k]=Number(o[k])||0);o.active=String(o.active).toLowerCase()!=="false";return o});
+}
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.v){view=b.dataset.v;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+    document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+view));R[view]();return}
+  const upd=async(id,f)=>{const o=orders.find(x=>x.id===id);Object.assign(o,f);R[view]();try{await api.admin.updateOrder(key,id,f)}catch(err){toast("Not saved: "+err.message)}};
+  if(b.dataset.del){const o=orders.find(x=>x.id===b.dataset.del);upd(o.id,{status:o.status==="delivered"?"placed":"delivered"});return}
+  if(b.dataset.paid){const o=orders.find(x=>x.id===b.dataset.paid);upd(o.id,{payment:o.payment==="paid"?"pending":"paid"});return}
+  if(b.dataset.cx){if(confirm("Cancel this order?"))upd(b.dataset.cx,{status:"cancelled"});return}
+  if(b.id==="psave"){try{await api.admin.saveProducts(key,products);toast("✓ Prices saved & live")}catch(err){toast("Save failed: "+err.message)}renderPrices()}
+  if(b.id==="pexp"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv()],{type:"text/csv"}));a.download=`mandi2door-prices-${ymd(new Date())}.csv`;a.click()}
+  if(b.id==="padd"){const en=prompt("Item name (English)");if(!en)return;const unit=prompt("Pack size, e.g. 500 g","1 kg")||"1 pc";
+    const cat=(prompt("Category: veg / fruit / dairy / eggs","veg")||"veg").trim();
+    products.push({id:en.toLowerCase().replace(/\W+/g,"")+Date.now()%1000,cat,emoji:"🥬",en,mr:en,hi:en,unit,price:0,cost:0,blinkit:0,instamart:0,zepto:0,local:0,active:true});renderPrices()}
+  if(b.id==="csave"){document.querySelectorAll("[data-cost]").forEach(i=>costs[i.dataset.cost]=Number(i.value)||0);LS.set("costs",costs);toast("✓ Saved")}
+});
+document.addEventListener("change",async e=>{
+  const i=e.target;
+  if(i.dataset.pid){const p=byId(i.dataset.pid);p[i.dataset.k]=i.type==="checkbox"?i.checked:Number(i.value)||0;
+    if(i.type!=="checkbox"){const tr=i.closest("tr"),c=tr.querySelectorAll("td");const mg=p.price?Math.round((p.price-p.cost)/p.price*100):0;
+      c[c.length-2].textContent=mg+"%";c[c.length-2].className="n"+(mg<10?" bad":"");c[c.length-1].textContent=rupee(saving(p))}}
+  if(i.id==="pimp"&&i.files[0]){const list=parseCsv(await i.files[0].text());if(!list.length)return toast("No rows found");products=list;renderPrices();toast(`Loaded ${list.length} items. Tap Save prices.`)}
+  if(i.id==="date")load();
+});
+
+async function login(){
+  const k=$("#pin").value.trim(); $("#lgo").textContent="…";
+  if(await api.admin.login(k)){key=k;sessionStorage.setItem("m2dk",k);$("#loginv").hidden=true;$("#app").hidden=false;$("#date").value=nextDeliveryDate();load()}
+  else{$("#lgo").textContent="Log in";toast("Wrong PIN")}
+}
+$("#lgo").onclick=login; $("#pin").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+$("#lhint").textContent=M2D.demo?`Demo mode. PIN: ${C.DEMO_ADMIN_PIN}`:"Enter your admin key";
+try{const k=sessionStorage.getItem("m2dk");if(k){$("#pin").value=k;login()}}catch(e){}
+</script>
+</body>
+</html>
