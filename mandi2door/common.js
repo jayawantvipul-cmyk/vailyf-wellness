@@ -167,7 +167,7 @@
       if (i >= 0) all[i] = s; else all.push(s); LS.set("subs", all); return { ok: true };
     },
     admin: {
-      async login(key) { return key === C.DEMO_ADMIN_PIN; },
+      async login(key) { return key === C.DEMO_ADMIN_PIN ? true : "Wrong PIN. Demo PIN is " + C.DEMO_ADMIN_PIN; },
       async orders(key, date) { return LS.get("orders", []).filter((o) => o.deliveryDate === date); },
       async subs() { return LS.get("subs", []); },
       async updateOrder(key, id, fields) {
@@ -192,7 +192,10 @@
     async mySubs(phone, flat) { return (await call("mySubs", { phone, flat })).subs; },
     async saveSub(s) { return call("saveSub", { sub: s }); },
     admin: {
-      async login(key) { try { await call("adminPing", { key }); return true; } catch (e) { return false; } },
+      async login(key) {
+        try { await call("adminPing", { key }); return true; }
+        catch (e) { return e.message === "Unauthorized" ? "Key doesn't match ADMIN_KEY in Apps Script. Check spelling and capitals." : "Can't reach your Google Sheet (" + e.message + "). Check internet, or the deployment access is not set to Anyone."; }
+      },
       async orders(key, date) { return (await call("adminOrders", { key, date })).orders; },
       async subs(key) { return (await call("adminSubs", { key })).subs; },
       async updateOrder(key, id, fields) { return call("adminUpdateOrder", { key, id, fields }); },
