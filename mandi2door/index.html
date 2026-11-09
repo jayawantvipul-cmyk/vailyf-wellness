@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mandi2Door · Fresh from APMC</title>
+<meta name="description" content="Fresh vegetables, fruits, milk and eggs from APMC to your door. Order by 10 PM, delivered 6–8 AM.">
+<meta name="theme-color" content="#1a7a4a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥬</text></svg>">
+<style>
+:root{--g:#1a7a4a;--g2:#25a862;--gp:#e8f6ee;--am:#f59e0b;--al:#fff6e0;--rd:#d93025;--ink:#13201a;--mut:#5b6b62;--bd:#dde9e1;--bg:#f5f8f6;--wh:#fff;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;padding-bottom:140px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select,textarea{font:inherit;width:100%;padding:12px;border:1.5px solid var(--bd);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--g2)}
+header{background:linear-gradient(135deg,#0f4d2c,var(--g) 60%,var(--g2));color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.3px}.logo small{display:block;font-weight:500;font-size:11.5px;opacity:.85;letter-spacing:0}
+.lang{display:flex;background:rgba(255,255,255,.16);border-radius:20px;padding:3px}
+.lang button{padding:5px 9px;border-radius:16px;font-size:12.5px;font-weight:600;color:#fff}
+.lang button.on{background:#fff;color:var(--g)}
+.cut{margin-top:10px;background:rgba(0,0,0,.18);border-radius:10px;padding:8px 10px;font-size:12.5px;display:flex;justify-content:space-between;gap:8px}
+.cut b{color:#ffe08a}
+.demo{background:var(--al);color:#7a4d00;font-size:12px;padding:7px 16px;text-align:center}
+main{max-width:640px;margin:0 auto;padding:12px 16px}
+.view{display:none}.view.on{display:block}
+.search{margin-bottom:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:20px;background:#fff;border:1.5px solid var(--bd);font-weight:600;font-size:13.5px}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.note{font-size:12px;color:var(--mut);margin:4px 2px 12px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:520px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--bd);padding:12px;display:flex;gap:12px;align-items:flex-start}
+.emo{font-size:34px;width:52px;height:52px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--gp);border-radius:12px}
+.info{flex:1;min-width:0}
+.nm{font-weight:700;font-size:15.5px;line-height:1.25}.nm small{display:block;font-weight:500;color:var(--mut);font-size:12px}
+.unit{font-size:12.5px;color:var(--mut);margin-top:2px}
+.prow{display:flex;align-items:baseline;gap:8px;margin-top:6px;flex-wrap:wrap}
+.price{font-weight:800;font-size:18px}
+.was{font-size:12.5px;color:var(--mut);text-decoration:line-through}
+.badge{background:var(--al);color:#8a5300;font-weight:700;font-size:11.5px;padding:2px 7px;border-radius:6px}
+.cmp{font-size:11.5px;color:var(--mut);margin-top:4px;line-height:1.5}
+.act{align-self:center;flex:none}
+.addb{background:var(--g);color:#fff;font-weight:700;padding:9px 18px;border-radius:10px}
+.step{display:flex;align-items:center;background:var(--g);color:#fff;border-radius:10px;overflow:hidden}
+.step button{width:34px;height:38px;font-size:19px;font-weight:700;color:#fff}
+.step span{min-width:22px;text-align:center;font-weight:700}
+.bar{position:fixed;left:0;right:0;bottom:64px;z-index:25;padding:0 12px;display:none}
+.bar.on{display:block}
+.bar button{max-width:616px;margin:0 auto;width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;border-radius:14px;padding:13px 16px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.bar small{display:block;color:#9fe0b9;font-weight:600;font-size:12px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);display:flex;z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:8px 0 9px;font-size:11.5px;font-weight:600;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+nav button span{font-size:21px}
+nav button.on{color:var(--g)}
+.cnt{position:absolute;top:4px;left:55%;background:var(--rd);color:#fff;font-size:10.5px;border-radius:9px;padding:1px 6px}
+.panel{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.panel h3{font-size:16px;margin-bottom:10px}
+.line{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:14.5px}
+.line.tot{border-top:1px dashed var(--bd);margin-top:6px;padding-top:10px;font-weight:800;font-size:17px}
+.save{background:linear-gradient(135deg,#fff3cf,#ffe6a3);border:1px solid #f3d27a;border-radius:var(--r);padding:14px;margin-bottom:12px}
+.save .big{font-size:24px;font-weight:800;color:#7a4300}
+.save .rows{font-size:12.5px;color:#6b4a00;margin-top:6px;line-height:1.6}
+.ci{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eef3f0}
+.ci:last-child{border:0}
+.ci .emo{width:40px;height:40px;font-size:24px}
+.lbl{font-size:12.5px;font-weight:600;color:var(--mut);margin:10px 0 5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:block;width:100%;text-align:center;background:var(--g);color:#fff;font-weight:700;padding:14px;border-radius:12px;font-size:15.5px;margin-top:12px;text-decoration:none}
+.btn.alt{background:#fff;color:var(--g);border:1.5px solid var(--g)}
+.btn.wa{background:#25d366}
+.btn:disabled{opacity:.5}
+.hint{background:var(--gp);color:var(--g);font-size:13px;font-weight:600;padding:9px 12px;border-radius:10px;margin-top:8px}
+.empty{text-align:center;color:var(--mut);padding:40px 10px}
+.empty div{font-size:46px;margin-bottom:8px}
+.ord{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.ord .top{display:flex;justify-content:space-between;font-weight:700}
+.ord .its{font-size:13px;color:var(--mut);margin:6px 0;line-height:1.5}
+.pill{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--gp);color:var(--g)}
+.pill.am{background:var(--al);color:#8a5300}.pill.gr{background:#eceff1;color:#555}
+.days[hidden]{display:none}
+.days{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.days button{width:40px;height:36px;border-radius:9px;border:1.5px solid var(--bd);font-weight:600;font-size:12.5px;background:#fff}
+.days button.on{background:var(--g);color:#fff;border-color:var(--g)}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px 4px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;font-weight:600;font-size:13px}
+.seg button.on{background:var(--gp);border-color:var(--g);color:var(--g)}
+.sub{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.sub .info small{color:var(--mut);font-size:12.5px}
+.sm{font-size:12.5px;font-weight:700;padding:7px 10px;border-radius:8px;border:1.5px solid var(--bd);background:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 26px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
+.ok{text-align:center}.ok .tick{font-size:56px}.ok h2{margin:6px 0}
+.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:60;display:none;max-width:90%}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="logo">🥬 Mandi2Door<small id="tagline"></small></div>
+    <div class="lang" id="lang">
+      <button data-l="en">EN</button><button data-l="mr">मरा</button><button data-l="hi">हिं</button>
+    </div>
+  </div>
+  <div class="cut"><span><span data-t="cutoffIn"></span> <b id="cd">--</b></span><span><span data-t="deliveryOn"></span>: <b id="dd"></b></span></div>
+</header>
+<div class="demo" id="demo" hidden data-t="demo"></div>
+
+<main>
+  <!-- SHOP -->
+  <section class="view on" id="v-shop">
+    <input class="search" id="q" type="search" autocomplete="off">
+    <div class="chips" id="chips"></div>
+    <p class="note" id="pnote"></p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- SUBSCRIPTIONS -->
+  <section class="view" id="v-subs">
+    <div class="panel">
+      <h3 data-t="subTitle"></h3>
+      <p class="note" style="margin:0 0 6px" data-t="subHelp"></p>
+      <div class="lbl" data-t="product"></div>
+      <select id="sp"></select>
+      <div class="two">
+        <div><div class="lbl" data-t="qty"></div><select id="sq"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+        <div><div class="lbl" data-t="freq"></div>
+          <select id="sf"><option value="daily" data-t="daily"></option><option value="alt" data-t="alt"></option><option value="custom" data-t="custom"></option></select></div>
+      </div>
+      <div class="days" id="sdays" hidden></div>
+      <button class="btn" id="sbtn" data-t="startSub"></button>
+    </div>
+    <div id="slist"></div>
+  </section>
+
+  <!-- ORDERS -->
+  <section class="view" id="v-orders">
+    <div class="save" id="osave" hidden><div data-t="totalSaved" style="font-weight:600;color:#6b4a00"></div><div class="big" id="osaveamt"></div></div>
+    <div id="olist"></div>
+  </section>
+
+  <!-- CART -->
+  <section class="view" id="v-cart">
+    <div id="cartbody"></div>
+  </section>
+</main>
+
+<div class="bar" id="bar"><button id="barbtn"><span><span id="barl"></span><small id="bars"></small></span><span data-t="cart"></span> →</button></div>
+
+<nav id="nav">
+  <button data-v="shop" class="on"><span>🛒</span><b data-t="shop"></b></button>
+  <button data-v="subs"><span>🥛</span><b data-t="subs"></b></button>
+  <button data-v="orders"><span>📦</span><b data-t="orders"></b></button>
+  <button data-v="cart"><span>🧺</span><b data-t="cart"></b><i class="cnt" id="ncnt" hidden></i></button>
+</nav>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+const {C,T,LS,api,rupee,esc,cheapestElsewhere,saving,nextDeliveryDate,cutoffMoment,deliveryFee,upiLink,waLink,uid,parseYmd,COMPARE,COMPARE_LABEL}=M2D;
+let lang=LS.get("lang","en"), cat="all", products=[], pricesUpdated="", cart=LS.get("cart",{}), me=LS.get("me",null), subDays=[];
+const $=s=>document.querySelector(s);
+const t=(k,v={})=>(T[lang][k]||T.en[k]||k).replace(/\{(\w+)\}/g,(_,x)=>v[x]);
+const pname=p=>lang==="en"?p.en:(p[lang]||p.en);
+const byId=id=>products.find(p=>p.id===id);
+const fmtDate=s=>parseYmd(s).toLocaleDateString(lang==="en"?"en-IN":lang+"-IN",{weekday:"short",day:"numeric",month:"short"});
+function toast(m){const e=$("#toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2200)}
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll("#lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  $("#tagline").textContent=C.SOCIETY+" · "+t("tagline");
+  $("#q").placeholder=t("search");
+  renderAll();
+}
+function tick(){
+  const ms=cutoffMoment()-new Date(), h=Math.floor(ms/3600000), m=Math.floor(ms%3600000/60000);
+  $("#cd").textContent=`${h}h ${m}m`;
+  $("#dd").textContent=fmtDate(nextDeliveryDate())+", "+C.DELIVERY_SLOT;
+}
+
+// ---------- shop ----------
+function renderChips(){
+  $("#chips").innerHTML=["all","veg","fruit","dairy","eggs"].map(c=>`<button class="chip ${c===cat?"on":""}" data-c="${c}">${t(c)}</button>`).join("");
+}
+function stepper(id){
+  const q=cart[id]||0;
+  return q?`<div class="step"><button data-d="${id}" aria-label="less">−</button><span>${q}</span><button data-a="${id}" aria-label="more">+</button></div>`
+          :`<button class="addb" data-a="${id}">${t("add")}</button>`;
+}
+function renderGrid(){
+  const q=$("#q").value.trim().toLowerCase();
+  const list=products.filter(p=>p.active!==false&&(cat==="all"||p.cat===cat)&&(!q||[p.en,p.mr,p.hi,p.id].join(" ").toLowerCase().includes(q)));
+  $("#pnote").textContent=t("pricesNote",{date:pricesUpdated?fmtDate(pricesUpdated):"—"});
+  $("#grid").innerHTML=list.map(p=>{
+    const s=saving(p), ce=cheapestElsewhere(p);
+    const cmp=COMPARE.filter(k=>Number(p[k])>0).map(k=>`${COMPARE_LABEL[k]} ${rupee(p[k])}`).join(" · ");
+    return `<div class="card"><div class="emo">${p.emoji||"🥬"}</div><div class="info">
+      <div class="nm">${esc(pname(p))}${lang!=="en"?`<small>${esc(p.en)}</small>`:""}</div>
+      <div class="unit">${esc(p.unit)}</div>
+      <div class="prow"><span class="price">${rupee(p.price)}</span>${s>0?`<span class="was">${rupee(ce)}</span><span class="badge">${t("save")} ${rupee(s)}</span>`:""}</div>
+      <div class="cmp">${esc(cmp)}</div></div>
+      <div class="act" id="st-${p.id}">${stepper(p.id)}</div></div>`;
+  }).join("")||`<div class="empty"><div>🔍</div></div>`;
+}
+function setQty(id,d){
+  cart[id]=Math.max(0,(cart[id]||0)+d); if(!cart[id])delete cart[id];
+  LS.set("cart",cart);
+  const st=$("#st-"+id); if(st)st.innerHTML=stepper(id);
+  renderBar(); if($("#v-cart").classList.contains("on"))renderCart();
+}
+function totals(){
+  let sub=0,sav=0,n=0; const plat={blinkit:0,instamart:0,zepto:0,local:0};
+  for(const [id,q] of Object.entries(cart)){const p=byId(id); if(!p)continue;
+    sub+=p.price*q; sav+=saving(p)*q; n+=q;
+    COMPARE.forEach(k=>plat[k]+=(Number(p[k])||p.price)*q);}
+  const fee=deliveryFee(sub);
+  return {sub,sav,n,fee,total:sub+fee,plat};
+}
+function renderBar(){
+  const x=totals();
+  $("#bar").classList.toggle("on",x.n>0&&!$("#v-cart").classList.contains("on"));
+  $("#barl").textContent=`${x.n} · ${rupee(x.sub)}`;
+  $("#bars").textContent=x.sav>0?`${t("youSave")} ${rupee(x.sav)}`:"";
+  $("#ncnt").hidden=!x.n; $("#ncnt").textContent=x.n;
+}
+
+// ---------- cart ----------
+function renderCart(){
+  const x=totals();
+  if(!x.n){$("#cartbody").innerHTML=`<div class="empty"><div>🧺</div>${t("empty")}</div>`;return;}
+  const items=Object.entries(cart).map(([id,q])=>{const p=byId(id); if(!p)return "";
+    return `<div class="ci"><div class="emo">${p.emoji}</div><div class="info"><div class="nm" style="font-size:14.5px">${esc(pname(p))}</div><div class="unit">${esc(p.unit)} · ${rupee(p.price)}</div></div>
+    <b style="margin-right:6px">${rupee(p.price*q)}</b><div id="st-${id}">${stepper(id)}</div></div>`}).join("");
+  const plat=COMPARE.map(k=>`${COMPARE_LABEL[k]}: <b>${rupee(x.plat[k])}</b>`).join(" · ");
+  const gap=C.FREE_DELIVERY_ABOVE-x.sub;
+  const d=me||{};
+  $("#cartbody").innerHTML=`
+   ${x.sav>0?`<div class="save"><div style="font-weight:600;color:#6b4a00">${t("youSave")} ${t("onThisOrder")}</div><div class="big">${rupee(x.sav)}</div><div class="rows">${plat}</div></div>`:""}
+   <div class="panel">${items}</div>
+   <div class="panel">
+     <div class="line"><span>${t("subtotal")}</span><span>${rupee(x.sub)}</span></div>
+     <div class="line"><span>${t("delivery")}</span><span>${x.fee?rupee(x.fee):`<b style="color:var(--g)">${t("free")}</b>`}</span></div>
+     <div class="line tot"><span>${t("total")}</span><span>${rupee(x.total)}</span></div>
+     ${gap>0?`<div class="hint">${t("addMore",{n:Math.ceil(gap)})}</div>`:""}
+   </div>
+   <div class="panel"><h3>${t("yourDetails")}</h3>
+     <div class="lbl">${t("name")}</div><input id="fn" value="${esc(d.name||"")}" autocomplete="name">
+     <div class="lbl">${t("phone")}</div><input id="fp" value="${esc(d.phone||"")}" inputmode="numeric" maxlength="10" autocomplete="tel">
+     <div class="two"><div><div class="lbl">${t("wing")}</div><input id="fw" value="${esc(d.wing||"")}" placeholder="A2"></div>
+     <div><div class="lbl">${t("flat")}</div><input id="ff" value="${esc(d.flat||"")}" inputmode="numeric" placeholder="1203"></div></div>
+     <div class="lbl">${t("note")}</div><input id="fnote" placeholder="Ring bell / leave at door">
+     <button class="btn" id="place">${t("placeOrder")}</button>
+   </div>`;
+}
+function readMe(){
+  const m={name:$("#fn").value.trim(),phone:$("#fp").value.replace(/\D/g,"").slice(-10),wing:$("#fw").value.trim().toUpperCase(),flat:$("#ff").value.trim()};
+  if(!m.name||m.phone.length!==10||!m.wing||!m.flat){toast("Please fill name, 10-digit mobile, wing and flat");return null;}
+  me=m; LS.set("me",me); return m;
+}
+async function placeOrder(){
+  const m=readMe(); if(!m)return;
+  const x=totals();
+  const items=Object.entries(cart).map(([id,q])=>{const p=byId(id);return {id,name:p.en,unit:p.unit,qty:q,price:p.price,cost:p.cost,save:saving(p)}});
+  const o={id:uid("M2D-"),createdAt:new Date().toISOString(),deliveryDate:nextDeliveryDate(),...m,
+    note:$("#fnote").value.trim(),items,subtotal:x.sub,fee:x.fee,total:x.total,savings:x.sav,payment:"pending",status:"placed"};
+  const b=$("#place"); b.disabled=true; b.textContent="…";
+  try{ await api.placeOrder(o); }catch(e){ b.disabled=false; b.textContent=t("placeOrder"); toast("Could not place order. Check internet and retry."); return; }
+  cart={}; LS.set("cart",cart); renderBar(); renderGrid();
+  const summary=`*Mandi2Door order ${o.id}*\n${m.name}, ${m.wing}-${m.flat}\nDelivery: ${fmtDate(o.deliveryDate)}, ${C.DELIVERY_SLOT}\n`+
+    items.map(i=>`• ${i.name} ${i.unit} × ${i.qty} = ₹${i.price*i.qty}`).join("\n")+
+    `\nTotal: ₹${o.total}${o.fee?` (incl. ₹${o.fee} delivery)`:""}\nSaved: ₹${o.savings}`;
+  $("#sheet").innerHTML=`<div class="ok"><div class="tick">✅</div><h2>${t("placed")}</h2>
+    <p style="color:var(--mut)">${t("placedMsg",{date:fmtDate(o.deliveryDate),slot:C.DELIVERY_SLOT})}</p>
+    <div class="save" style="margin-top:14px"><div style="font-weight:600;color:#6b4a00">${t("youSave")}</div><div class="big">${rupee(o.savings)}</div></div>
+    <p style="font-size:13px;color:var(--mut)">${o.id} · ${t("total")} <b>${rupee(o.total)}</b></p></div>
+    <a class="btn" href="${upiLink(o.total,o.id)}">${t("payUpi")} · ${rupee(o.total)}</a>
+    <a class="btn wa" href="${waLink(summary)}" target="_blank" rel="noopener">${t("shareWa")}</a>
+    <button class="btn alt" id="mclose">${t("done")}</button>`;
+  $("#modal").classList.add("on");
+  $("#mclose").onclick=()=>{$("#modal").classList.remove("on");show("orders")};
+}
+
+// ---------- orders ----------
+async function renderOrders(){
+  if(!me){$("#olist").innerHTML=`<div class="empty"><div>📦</div>${t("noOrders")}</div>`;$("#osave").hidden=true;return;}
+  let list=[]; try{list=await api.myOrders(me.phone,me.flat);}catch(e){toast("Offline")}
+  const tot=list.reduce((a,o)=>a+Number(o.savings||0),0);
+  $("#osave").hidden=!tot; $("#osaveamt").textContent=rupee(tot);
+  const pill=o=>o.status==="delivered"?`<span class="pill">✓ Delivered</span>`:o.status==="cancelled"?`<span class="pill gr">Cancelled</span>`:`<span class="pill am">${fmtDate(o.deliveryDate)}</span>`;
+  $("#olist").innerHTML=list.length?list.map(o=>`<div class="ord"><div class="top"><span>${rupee(o.total)}</span>${pill(o)}</div>
+    <div class="its">${o.items.map(i=>`${esc(i.name)} ×${i.qty}`).join(", ")}</div>
+    <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut)"><span>${o.id}</span><span>${t("save")} <b style="color:#8a5300">${rupee(o.savings)}</b> · ${o.payment==="paid"?"Paid ✓":`<a href="${upiLink(o.total,o.id)}" style="color:var(--g);font-weight:700">${t("payUpi")}</a>`}</span></div></div>`).join("")
+    :`<div class="empty"><div>📦</div>${t("noOrders")}</div>`;
+}
+
+// ---------- subscriptions ----------
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function renderSubForm(){
+  const cur=$("#sp").value;
+  $("#sp").innerHTML=products.filter(p=>(p.cat==="dairy"||p.cat==="eggs")&&p.active!==false).map(p=>`<option value="${p.id}">${esc(pname(p))} · ${esc(p.unit)} · ${rupee(p.price)}</option>`).join("");
+  if(cur)$("#sp").value=cur;
+  $("#sdays").innerHTML=WD.map((d,i)=>`<button data-wd="${i}" class="${subDays.includes(i)?"on":""}">${d}</button>`).join("");
+  $("#sdays").hidden=$("#sf").value!=="custom";
+}
+async function renderSubs(){
+  renderSubForm();
+  if(!me){$("#slist").innerHTML="";return;}
+  let list=[]; try{list=await api.mySubs(me.phone,me.flat);}catch(e){}
+  const fq=s=>s.freq==="daily"?t("daily"):s.freq==="alt"?t("alt"):String(s.days).split(",").map(i=>WD[i]).join(", ");
+  $("#slist").innerHTML=list.length?list.map(s=>{const p=byId(s.productId)||{en:s.productId,unit:"",price:0,emoji:"🥛"};
+    const paused=s.status==="paused"||(s.pauseUntil&&s.pauseUntil>=M2D.ymd(new Date()));
+    return `<div class="sub"><div class="emo">${p.emoji}</div><div class="info"><div class="nm" style="font-size:14.5px">${esc(pname(p))} × ${s.qty}</div>
+    <small>${esc(p.unit)} · ${fq(s)} · ${rupee(p.price*s.qty)}${t("perDay")}</small><br>
+    <span class="pill ${paused?"am":""}">${paused?t("paused"):t("active")}</span></div>
+    <div style="display:flex;flex-direction:column;gap:6px"><button class="sm" data-sp="${s.id}">${paused?t("resume"):t("pause")}</button><button class="sm" data-sx="${s.id}" style="color:var(--rd)">${t("cancel")}</button></div></div>`}).join("")
+    :`<div class="empty"><div>🥛</div>${t("noSubs")}</div>`;
+  $("#slist")._list=list;
+}
+async function startSub(){
+  if(!me){toast(t("yourDetails")+": "+t("cart")+" →");askDetails(startSub);return;}
+  const freq=$("#sf").value;
+  if(freq==="custom"&&!subDays.length){toast("Pick at least one day");return;}
+  const s={id:uid("SUB-"),phone:me.phone,name:me.name,wing:me.wing,flat:me.flat,productId:$("#sp").value,qty:Number($("#sq").value),
+    freq,days:subDays.join(","),start:nextDeliveryDate(),status:"active",pauseUntil:"",createdAt:new Date().toISOString()};
+  await api.saveSub(s); toast("✓ "+t("active")); renderSubs();
+}
+function askDetails(after){
+  const d=me||{};
+  $("#sheet").innerHTML=`<h3 style="margin-bottom:6px">${t("yourDetails")}</h3>
+   <div class="lbl">${t("name")}</div><input id="fn" value="${esc(d.name||"")}">
+   <div class="lbl">${t("phone")}</div><input id="fp" inputmode="numeric" maxlength="10" value="${esc(d.phone||"")}">
+   <div class="two"><div><div class="lbl">${t("wing")}</div><input id="fw" placeholder="A2"></div><div><div class="lbl">${t("flat")}</div><input id="ff" inputmode="numeric" placeholder="1203"></div></div>
+   <button class="btn" id="dgo">${t("continue")}</button>`;
+  $("#modal").classList.add("on");
+  $("#dgo").onclick=()=>{if(readMe()){$("#modal").classList.remove("on");after();}};
+}
+
+// ---------- nav ----------
+function show(v){
+  document.querySelectorAll(".view").forEach(e=>e.classList.toggle("on",e.id==="v-"+v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  if(v==="cart")renderCart(); if(v==="orders")renderOrders(); if(v==="subs")renderSubs();
+  renderBar(); scrollTo(0,0);
+}
+function renderAll(){renderChips();renderGrid();renderBar();const v=document.querySelector("nav button.on").dataset.v;if(v!=="shop")show(v);tick();}
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button,[data-a]"); if(!b)return;
+  if(b.dataset.a){setQty(b.dataset.a,1);return}
+  if(b.dataset.d){setQty(b.dataset.d,-1);return}
+  if(b.dataset.c){cat=b.dataset.c;renderChips();renderGrid();return}
+  if(b.dataset.l){lang=b.dataset.l;LS.set("lang",lang);applyLang();return}
+  if(b.dataset.v){show(b.dataset.v);return}
+  if(b.dataset.wd){const i=+b.dataset.wd;subDays=subDays.includes(i)?subDays.filter(x=>x!==i):[...subDays,i];renderSubForm();return}
+  if(b.dataset.sp||b.dataset.sx){const s=$("#slist")._list.find(x=>x.id===(b.dataset.sp||b.dataset.sx));
+    if(b.dataset.sx){if(!confirm(t("cancel")+"?"))return;s.status="cancelled";}
+    else if(s.status==="paused"||s.pauseUntil>=M2D.ymd(new Date())){s.status="active";s.pauseUntil="";}
+    else{s.status="paused";}
+    await api.saveSub(s);renderSubs();return}
+  if(b.id==="barbtn")show("cart");
+  if(b.id==="place")placeOrder();
+  if(b.id==="sbtn")startSub();
+});
+$("#q").addEventListener("input",renderGrid);
+$("#sf").addEventListener("change",renderSubForm);
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").classList.remove("on")});
+
+(async function init(){
+  $("#demo").hidden=!M2D.demo;
+  try{const r=await api.products();products=r.products;pricesUpdated=r.pricesUpdated;}
+  catch(e){products=M2D.DEFAULT_PRODUCTS;toast("Showing saved prices (offline)");}
+  products.forEach(p=>["price","cost",...COMPARE].forEach(k=>p[k]=Number(p[k])||0));
+  applyLang(); setInterval(tick,30000);
+})();
+</script>
+</body>
+</html>
