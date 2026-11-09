@@ -6,8 +6,8 @@ window.M2D_CONFIG = {
 
   BRAND: "Mandi2Door",
   SOCIETY: "Balaji Symphony",
-  WHATSAPP: "919999999999",       // your business WhatsApp number, with 91, no +
-  UPI_ID: "mandi2door@upi",        // your UPI ID for payments
+  WHATSAPP: "919137861093",       // your business WhatsApp number, with 91, no +
+  UPI_ID: "vaishnavipul@okicici",        // your UPI ID for payments
   UPI_NAME: "Mandi2Door",
   CUTOFF_HOUR: 22,                 // orders close at 10 PM for next-day delivery
   DELIVERY_SLOT: "6–8 AM",
