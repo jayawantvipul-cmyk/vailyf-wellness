@@ -2,7 +2,7 @@
 window.M2D_CONFIG = {
   // Paste your Google Apps Script web-app URL here (see README.md).
   // Leave empty to run in DEMO mode (data stays on this phone only).
-  SHEETS_URL: "https://script.google.com/macros/s/AKfycbzmN-2LxJGx3yCjxgL1m62Si70LgVOAegi_wvcQC8f4w9CMdfZGrD2oaW5IH37AjxOkWQ/exec",
+  SHEETS_URL: "https://script.google.com/macros/s/AKfycbzt7BYD2kuNNy5pFNcsMY2nw5xe8Lt5DXTIX_o2bhC6J77On6FX2xsT9BuEQM9NM_C2GQ/exec",
 
   BRAND: "Mandi2Door",
   SOCIETY: "Balaji Symphony",
