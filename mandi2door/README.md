@@ -19,7 +19,7 @@ Open `index.html`, place an order, then open `admin.html` (PIN `1234`) in the sa
 4. Back in the editor, pick the `setup` function and click **Run**, then allow the permissions. This creates the Products, Orders and Subscriptions tabs.
 5. Click **Deploy → New deployment → Web app**. Set Execute as **Me** and Who has access **Anyone**, then deploy and copy the URL.
 6. In `config.js`, paste that URL into `SHEETS_URL` and set your `WHATSAPP` number and `UPI_ID`.
-7. Open `admin.html` → **Prices** → **Import CSV** (or type prices in) → **Save prices**. This puts the full catalogue into the sheet.
+7. `setup` has already filled in all 33 products with sample prices. Update them from `admin.html` → **Prices**, or directly in the Products tab.
 8. Share the link in the society WhatsApp groups. Residents tap ⋮ → **Add to Home screen** and it works like an app.
 
 > After any change to `Code.gs`, use **Deploy → Manage deployments → Edit → New version** so the URL stays the same.

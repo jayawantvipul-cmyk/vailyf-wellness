@@ -3,7 +3,7 @@
  * Setup: see ../README.md. In short:
  *  1. Create a Google Sheet, open Extensions > Apps Script, paste this file.
  *  2. Project Settings > Script properties: add ADMIN_KEY = a long secret only you know.
- *  3. Run setup() once (creates the tabs and sample prices).
+ *  3. Run setup() once (creates the tabs and all 33 products with sample prices).
  *  4. Deploy > New deployment > Web app: Execute as "Me", Access "Anyone". Copy the URL into config.js.
  */
 
@@ -146,12 +146,39 @@ function setup() {
   ["B:C", "E:F", "J:M"].forEach(r => ss.getSheetByName("Subscriptions").getRange(r).setNumberFormat("@"));
   if (sheet("Products").getLastRow() < 2) {
     const sample = [
-      ["onion", "veg", "🧅", "Onion", "कांदा", "प्याज", "1 kg", 32, 24, 45, 44, 43, 40, true],
-      ["potato", "veg", "🥔", "Potato", "बटाटा", "आलू", "1 kg", 30, 22, 42, 40, 39, 36, true],
-      ["tomato", "veg", "🍅", "Tomato", "टोमॅटो", "टमाटर", "1 kg", 36, 26, 52, 50, 49, 45, true],
-      ["banana", "fruit", "🍌", "Banana", "केळी", "केला", "1 dozen", 48, 36, 68, 65, 62, 60, true],
-      ["cowmilk", "dairy", "🥛", "Cow Milk", "गाईचे दूध", "गाय का दूध", "500 ml", 28, 25.5, 30, 30, 30, 30, true],
-      ["eggs12", "eggs", "🥚", "Eggs", "अंडी", "अंडे", "12 pcs", 80, 66, 104, 100, 98, 90, true],
+      ["onion","veg","🧅","Onion","कांदा","प्याज","1 kg",32,24,45,44,43,40,true],
+      ["potato","veg","🥔","Potato","बटाटा","आलू","1 kg",30,22,42,40,39,36,true],
+      ["tomato","veg","🍅","Tomato","टोमॅटो","टमाटर","1 kg",36,26,52,50,49,45,true],
+      ["chilli","veg","🌶️","Green Chilli","हिरवी मिरची","हरी मिर्च","100 g",8,5,14,13,12,10,true],
+      ["coriander","veg","🌿","Coriander","कोथिंबीर","धनिया","1 bunch",10,6,18,17,16,15,true],
+      ["ginger","veg","🫚","Ginger","आलं","अदरक","100 g",12,8,20,19,18,15,true],
+      ["garlic","veg","🧄","Garlic","लसूण","लहसुन","100 g",18,13,30,28,27,25,true],
+      ["lemon","veg","🍋","Lemon","लिंबू","नींबू","4 pcs",14,9,24,22,21,20,true],
+      ["cauliflower","veg","🥦","Cauliflower","फ्लॉवर","फूलगोभी","1 pc",30,20,45,42,40,40,true],
+      ["cabbage","veg","🥬","Cabbage","कोबी","पत्तागोभी","1 pc",25,16,38,36,35,30,true],
+      ["brinjal","veg","🍆","Brinjal","वांगी","बैंगन","500 g",25,17,38,36,35,30,true],
+      ["bhindi","veg","🫛","Lady Finger","भेंडी","भिंडी","500 g",30,21,45,44,42,40,true],
+      ["capsicum","veg","🫑","Capsicum","ढोबळी मिरची","शिमला मिर्च","250 g",20,14,32,30,29,25,true],
+      ["carrot","veg","🥕","Carrot","गाजर","गाजर","500 g",25,17,38,36,35,30,true],
+      ["cucumber","veg","🥒","Cucumber","काकडी","खीरा","500 g",20,13,30,29,28,25,true],
+      ["palak","veg","🥬","Spinach","पालक","पालक","1 bunch",15,9,25,24,23,20,true],
+      ["methi","veg","🌱","Methi","मेथी","मेथी","1 bunch",15,9,25,24,22,20,true],
+      ["dudhi","veg","🥒","Bottle Gourd","दुधी भोपळा","लौकी","1 pc",25,16,40,38,36,30,true],
+      ["beans","veg","🫘","French Beans","फरसबी","फ्रेंच बीन्स","250 g",22,15,35,33,32,28,true],
+      ["banana","fruit","🍌","Banana","केळी","केला","1 dozen",48,36,68,65,62,60,true],
+      ["apple","fruit","🍎","Apple (Shimla)","सफरचंद","सेब","1 kg",140,110,200,190,185,180,true],
+      ["pomegranate","fruit","🔴","Pomegranate","डाळिंब","अनार","500 g",80,62,120,115,110,100,true],
+      ["papaya","fruit","🥭","Papaya","पपई","पपीता","1 pc",45,32,70,65,62,60,true],
+      ["orange","fruit","🍊","Orange (Nagpur)","संत्री","संतरा","1 kg",70,52,110,105,99,90,true],
+      ["guava","fruit","🍐","Guava","पेरू","अमरूद","500 g",40,29,60,58,55,50,true],
+      ["chikoo","fruit","🟤","Chikoo","चिकू","चीकू","500 g",45,33,70,66,64,60,true],
+      ["cowmilk","dairy","🥛","Cow Milk","गाईचे दूध","गाय का दूध","500 ml",28,25.5,30,30,30,30,true],
+      ["bufmilk","dairy","🥛","Buffalo Milk","म्हशीचे दूध","भैंस का दूध","500 ml",36,33,38,38,38,38,true],
+      ["curd","dairy","🥣","Curd","दही","दही","400 g",38,32,45,45,44,42,true],
+      ["paneer","dairy","🧀","Paneer","पनीर","पनीर","200 g",80,65,100,98,95,90,true],
+      ["eggs6","eggs","🥚","Eggs","अंडी","अंडे","6 pcs",42,34,54,52,51,48,true],
+      ["eggs12","eggs","🥚","Eggs","अंडी","अंडे","12 pcs",80,66,104,100,98,90,true],
+      ["eggs30","eggs","🥚","Eggs Tray","अंड्यांचा ट्रे","अंडे ट्रे","30 pcs",190,160,255,245,240,220,true],
     ];
     sheet("Products").getRange(2, 1, sample.length, PRODUCT_COLS.length).setValues(sample);
   }
