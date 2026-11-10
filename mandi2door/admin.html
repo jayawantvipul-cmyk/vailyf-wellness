@@ -50,7 +50,9 @@ td.n,th.n{text-align:right;white-space:nowrap}
 .login{max-width:340px;margin:80px auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:24px;text-align:center}
 .login #pin{width:100%;margin:14px 0;text-align:center;font-size:17px}
 .warn{color:#8a5300}.bad{color:var(--rd);font-weight:700}
-.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:60;display:none}
+.bar{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+.bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar i{display:block;height:12px;background:var(--g2);border-radius:6px}.bar b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.warn{color:#8a5300}.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:60;display:none}
 </style>
 </head>
 <body>
@@ -68,7 +70,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
   <div class="hrow"><b>📋 Mandi2Door Admin</b>
     <label class="muted" style="color:#cfe">Delivery date <input type="date" id="date" style="padding:5px 7px"></label></div>
   <div class="tabs" id="tabs">
-    <button data-v="today" class="on">📊 Today</button><button data-v="buy">🛒 Buy list</button>
+    <button data-v="today" class="on">📊 Today</button><button data-v="insights">📈 Insights</button><button data-v="buy">🛒 Buy list</button>
     <button data-v="route">🚚 Delivery</button><button data-v="prices">💰 Prices</button>
     <button data-v="subs">🥛 Subscriptions</button><button data-v="costs">⚙️ Costs</button>
   </div>
@@ -80,6 +82,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
   <section class="view" id="v-prices"></section>
   <section class="view" id="v-subs"></section>
   <section class="view" id="v-costs"></section>
+  <section class="view" id="v-insights"></section>
 </main>
 </div>
 <div class="toast" id="toast"></div>
@@ -217,7 +220,110 @@ function renderCosts(){
    <div class="panel"><h3>Mode</h3><p class="muted">${M2D.demo?"DEMO mode: orders are stored only in this browser. Connect a Google Sheet (see README) to go live.":"LIVE: connected to Google Sheet."}</p></div>`;
 }
 
-const R={today:renderToday,buy:renderBuy,route:renderRoute,prices:renderPrices,subs:renderSubs,costs:renderCosts};
+
+// ---------- Insights: link sources and shopper behaviour ----------
+let evDays=7, evRows=null, evLoading=false;
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const pname=id=>{const p=byId(id);return p?`${p.emoji} ${p.en} ${p.unit}`:id};
+function crunch(rows){
+  const sess={},vids=new Set(),newV=new Set(),days={},srcs={},adds={},rems={},srch={},zero={},hours=Array(24).fill(0);
+  for(const [d,h,v,s,e,src,lang,a,n] of rows){
+    vids.add(v);
+    const S=sess[s]||(sess[s]={src,lang,v,steps:new Set(),orders:0,value:0}); S.steps.add(e);
+    const D=days[d]||(days[d]={v:new Set(),o:0}); D.v.add(v);
+    if(e==="open"&&a==="new")newV.add(v);
+    if(e==="lang")S.lang=a;
+    if(e==="add")adds[a]=(adds[a]||0)+1;
+    if(e==="remove")rems[a]=(rems[a]||0)+1;
+    if(e==="search"){const k=a.toLowerCase();srch[k]=(srch[k]||0)+1;if(!n)zero[k]=(zero[k]||0)+1;}
+    if(e==="order"){S.orders++;S.value+=n;D.o++;hours[h]++;}
+  }
+  const list=Object.values(sess), langs={en:0,mr:0,hi:0};
+  for(const S of list){
+    langs[S.lang]=(langs[S.lang]||0)+1;
+    const R=srcs[S.src]||(srcs[S.src]={v:new Set(),s:0,add:0,o:0,os:0,val:0});
+    R.v.add(S.v);R.s++;if(S.steps.has("add"))R.add++;if(S.orders)R.os++;R.o+=S.orders;R.val+=S.value;
+  }
+  const has=k=>list.filter(S=>S.steps.has(k)).length;
+  const orders=list.reduce((a,S)=>a+S.orders,0), value=list.reduce((a,S)=>a+S.value,0);
+  return {visitors:vids.size,newV:newV.size,sessions:list.length,orders,value,days,srcs,adds,rems,srch,zero,hours,langs,
+    funnel:[["Opened the app",list.length],["Added an item",has("add")],["Opened the cart",has("cart")],["Tapped Place order",has("checkout")],["Order placed",list.filter(S=>S.orders).length]]};
+}
+async function loadEvents(){
+  evLoading=true;renderInsights();
+  try{evRows=await api.admin.events(key,evDays)}catch(e){evRows=[];toast("Insights failed: "+e.message)}
+  evLoading=false;renderInsights();
+}
+function bars(obj,fmt){
+  const max=Math.max(1,...Object.values(obj));
+  return Object.entries(obj).map(([k,v])=>`<div class="bar"><span>${esc(fmt?fmt(k):k)}</span><i style="width:${Math.max(2,v/max*100)}%"></i><b>${v}</b></div>`).join("");
+}
+function topN(obj,n=10){return Object.fromEntries(Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n))}
+function linkBuilder(){
+  const base=new URL("./",location.href).href;
+  return `<div class="panel"><h3>🔗 Make a tracked link</h3>
+   <p class="muted" style="margin-bottom:8px">Use a different link in each WhatsApp group, poster or flyer. Insights then shows which one brings orders.</p>
+   <div class="row" style="margin-bottom:6px">${["wa-a-wing","wa-b-wing","lift-poster","gate-stall","flyer","society-app"].map(p=>`<button class="sm" data-src="${p}">${p}</button>`).join("")}</div>
+   <div class="row"><input id="srcname" placeholder="e.g. wa-c-wing or diwali-flyer" style="flex:1;min-width:180px"><button class="btn" id="mklink">Make link</button></div>
+   <div id="linkout" hidden style="margin-top:10px">
+     <code id="linkurl" style="display:block;word-break:break-all;background:var(--gp);padding:8px;border-radius:8px"></code>
+     <div class="row" style="margin-top:8px"><button class="btn alt" id="cplink">Copy</button><a class="btn wa" id="walink" target="_blank" rel="noopener">Share on WhatsApp</a><button class="btn alt" id="qrbtn">QR code for poster</button></div>
+     <div id="qr" style="margin-top:10px"></div>
+   </div><input type="hidden" id="linkbase" value="${esc(base)}"></div>`;
+}
+function renderInsights(){
+  const el=$("#v-insights");
+  const clar=C.CLARITY_ID?`<a class="btn alt" target="_blank" rel="noopener" href="https://clarity.microsoft.com/projects/view/${esc(C.CLARITY_ID)}/dashboard">🎥 Open Clarity recordings</a>`:`<span class="muted">Clarity is off. Add your project ID in config.js to see recordings and heatmaps.</span>`;
+  const head=`<div class="row"><select id="evdays"><option value="1">Today</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select>
+    <button class="sm" id="evreload">↻ Refresh</button>${clar}</div>`;
+  if(evLoading||!evRows){el.innerHTML=head+`<p class="muted">Loading visitor data…</p>`+linkBuilder();$("#evdays").value=evDays;if(!evRows&&!evLoading)loadEvents();return}
+  const x=crunch(evRows);
+  if(!evRows.length){el.innerHTML=head+`<div class="panel"><h3>No visits recorded yet</h3><p class="muted">Visits appear here a few minutes after people open the app. Share a tracked link below to start.</p></div>`+linkBuilder();$("#evdays").value=evDays;return}
+  const srcRows=Object.entries(x.srcs).sort((a,b)=>b[1].o-a[1].o||b[1].s-a[1].s);
+  const dayKeys=Object.keys(x.days).sort();
+  const dayV=Object.fromEntries(dayKeys.map(d=>[d,x.days[d].v.size]));
+  const f0=x.funnel[0][1]||1;
+  const zero=topN(x.zero,8);
+  el.innerHTML=head+`
+  <div class="kpis">
+    <div class="kpi"><small>Visitors</small><div>${x.visitors}</div></div>
+    <div class="kpi"><small>New visitors</small><div>${x.newV}</div></div>
+    <div class="kpi hi"><small>Orders from app</small><div>${x.orders}</div></div>
+    <div class="kpi hi"><small>Visit → order</small><div>${pct(x.funnel[4][1],x.sessions)}%</div></div>
+  </div>
+  <div class="panel"><h3>Where visitors come from</h3><table>
+    <tr><th>Source</th><th class="n">Visitors</th><th class="n">Added item</th><th class="n">Orders</th><th class="n">Conversion</th><th class="n">Sales</th></tr>
+    ${srcRows.map(([k,r])=>`<tr><td><b>${esc(k)}</b></td><td class="n">${r.v.size}</td><td class="n">${pct(r.add,r.s)}%</td><td class="n">${r.o}</td><td class="n">${pct(r.os,r.s)}%</td><td class="n">${rupee(r.val)}</td></tr>`).join("")}
+  </table><p class="muted" style="margin-top:6px">"direct" means the link had no ?src= tag, e.g. typed in or forwarded without it.</p></div>
+  <div class="panel"><h3>Shopping funnel: where people drop off</h3>
+    ${x.funnel.map(([l,v],i)=>`<div class="bar"><span>${l}</span><i style="width:${Math.max(2,v/f0*100)}%"></i><b>${v} · ${pct(v,f0)}%</b></div>${i<4&&x.funnel[i][1]?`<div class="muted" style="margin:-2px 0 6px 2px;font-size:12px">↓ ${100-pct(x.funnel[i+1][1],x.funnel[i][1])}% stopped here</div>`:""}`).join("")}
+  </div>
+  <div class="panel"><h3>Visitors per day</h3>${bars(dayV,d=>fmt(d))}</div>
+  <div class="panel"><h3>Most added items</h3>${Object.keys(x.adds).length?`<table><tr><th>Item</th><th class="n">Added</th><th class="n">Removed</th><th class="n">Remove rate</th></tr>
+    ${Object.entries(topN(x.adds,12)).map(([id,n])=>{const r=x.rems[id]||0,rr=pct(r,n);return `<tr><td>${esc(pname(id))}</td><td class="n">${n}</td><td class="n">${r}</td><td class="n ${rr>=40?"bad":""}">${rr}%</td></tr>`}).join("")}</table>
+    <p class="muted" style="margin-top:6px">A high remove rate (red) often means the price or pack size put people off.</p>`:`<p class="muted">No items added yet.</p>`}</div>
+  <div class="panel"><h3>What people searched for</h3>${Object.keys(x.srch).length?bars(topN(x.srch,10)):`<p class="muted">No searches yet.</p>`}
+    ${Object.keys(zero).length?`<p style="margin-top:10px"><b class="warn">Searched but not found:</b> ${Object.entries(zero).map(([q,n])=>`<span class="pill am">${esc(q)} ×${n}</span>`).join(" ")}</p><p class="muted">These are things residents want that you don't stock. Consider adding them.</p>`:""}</div>
+  <div class="row" style="align-items:stretch">
+    <div class="panel" style="flex:1;min-width:240px"><h3>Language used</h3>${bars({English:x.langs.en||0,"मराठी":x.langs.mr||0,"हिंदी":x.langs.hi||0})}</div>
+    <div class="panel" style="flex:2;min-width:280px"><h3>When orders are placed</h3>${x.orders?bars(Object.fromEntries(x.hours.map((v,h)=>[h,v]).filter(([h,v])=>v)),h=>(h%12||12)+(h<12?" AM":" PM")):`<p class="muted">No orders yet.</p>`}</div>
+  </div>`+linkBuilder();
+  $("#evdays").value=evDays;
+}
+async function showQR(url){
+  if(!window.QRCode){await new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+  $("#qr").innerHTML="";new QRCode($("#qr"),{text:url,width:200,height:200});
+  $("#qr").insertAdjacentHTML("beforeend",`<p class="muted" style="margin-top:6px">Long-press (phone) or right-click (laptop) the QR to save it for your poster.</p>`);
+}
+function makeLink(name){
+  const s=String(name||"").toLowerCase().trim().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"").slice(0,40);
+  if(!s)return toast("Type a name for this link, e.g. lift-poster");
+  const url=$("#linkbase").value+"?src="+s;
+  $("#srcname").value=s;$("#linkurl").textContent=url;$("#linkout").hidden=false;$("#qr").innerHTML="";
+  $("#walink").href=waLink(`🥬 Fresh vegetables, fruits, milk & eggs from APMC, delivered 6–8 AM to ${C.SOCIETY}. Save money compared to Blinkit and Zepto! Order by 10 PM: ${url}`,"");
+}
+
+const R={insights:renderInsights,today:renderToday,buy:renderBuy,route:renderRoute,prices:renderPrices,subs:renderSubs,costs:renderCosts};
 async function load(){
   const d=$("#date").value;
   try{
@@ -245,6 +351,11 @@ function parseCsv(txt){
 
 document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b)return;
+  if(b.id==="evreload"){loadEvents();return}
+  if(b.dataset.src){makeLink(b.dataset.src);return}
+  if(b.id==="mklink"){makeLink($("#srcname").value);return}
+  if(b.id==="cplink"){try{await navigator.clipboard.writeText($("#linkurl").textContent);toast("✓ Link copied")}catch(err){toast("Long-press the link to copy")}return}
+  if(b.id==="qrbtn"){showQR($("#linkurl").textContent).catch(()=>toast("Could not load QR maker. Check internet."));return}
   if(b.dataset.v){view=b.dataset.v;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
     document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+view));R[view]();return}
   const upd=async(id,f)=>{const o=orders.find(x=>x.id===id);Object.assign(o,f);R[view]();try{await api.admin.updateOrder(key,id,f)}catch(err){toast("Not saved: "+err.message)}};
@@ -265,6 +376,7 @@ document.addEventListener("change",async e=>{
       c[c.length-2].textContent=mg+"%";c[c.length-2].className="n"+(mg<10?" bad":"");c[c.length-1].textContent=rupee(saving(p))}}
   if(i.id==="pimp"&&i.files[0]){const list=parseCsv(await i.files[0].text());if(!list.length)return toast("No rows found");products=list;renderPrices();toast(`Loaded ${list.length} items. Tap Save prices.`)}
   if(i.id==="date")load();
+  if(i.id==="evdays"){evDays=Number(i.value);loadEvents();}
 });
 
 async function login(){

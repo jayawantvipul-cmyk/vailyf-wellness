@@ -61,6 +61,7 @@
       search: "Search tomato, milk, eggs…", demo: "Demo mode: data is saved on this phone only.",
       pricesNote: "Comparison prices checked {date}. Savings shown against the cheapest other app/vendor.",
       status: "Status", perDay: "/delivery", edit: "Edit", lang: "भाषा",
+      privacy: "We count visits anonymously to improve Mandi2Door. No name or phone is shared.",
     },
     mr: {
       tagline: "APMC मधून ताजं थेट घरी · रात्री १० पर्यंत ऑर्डर", shop: "खरेदी", subs: "रोजचं दूध", orders: "माझ्या ऑर्डर", cart: "कार्ट",
@@ -79,6 +80,7 @@
       search: "टोमॅटो, दूध, अंडी शोधा…", demo: "डेमो: माहिती फक्त या फोनवर साठवली जाते.",
       pricesNote: "तुलनात्मक किंमती {date} रोजी तपासल्या. बचत इतर ॲप/विक्रेत्यांच्या सर्वात स्वस्त किमतीशी.",
       status: "स्थिती", perDay: "/डिलिव्हरी", edit: "बदला", lang: "Language",
+      privacy: "सेवा सुधारण्यासाठी आम्ही भेटींची निनावी नोंद ठेवतो. नाव किंवा फोन शेअर होत नाही.",
     },
     hi: {
       tagline: "APMC से ताज़ा सीधे घर · रात 10 बजे तक ऑर्डर", shop: "खरीदें", subs: "रोज़ दूध", orders: "मेरे ऑर्डर", cart: "कार्ट",
@@ -97,6 +99,7 @@
       search: "टमाटर, दूध, अंडे खोजें…", demo: "डेमो: जानकारी सिर्फ़ इसी फ़ोन में सेव है.",
       pricesNote: "तुलना की कीमतें {date} को जाँची गईं. बचत बाकी ऐप/विक्रेताओं की सबसे सस्ती कीमत से.",
       status: "स्थिति", perDay: "/डिलीवरी", edit: "बदलें", lang: "Language",
+      privacy: "सेवा बेहतर बनाने के लिए हम विज़िट की गुमनाम गिनती करते हैं. नाम या फ़ोन साझा नहीं होता.",
     },
   };
 
@@ -175,6 +178,10 @@
         LS.set("orders", all); return { ok: true };
       },
       async saveProducts(key, list) { LS.set("products", list); LS.set("pricesUpdated", ymd(new Date())); return { ok: true }; },
+      async events(key, days) {
+        const from = addDays(ymd(new Date()), -(days - 1));
+        return LS.get("events", []).map((x) => { const d = new Date(x.t); return [ymd(d), d.getHours(), x.v, x.s, x.e, x.src, x.lang, x.a, x.n]; }).filter((r) => r[0] >= from);
+      },
     },
   };
 
@@ -200,6 +207,7 @@
       async subs(key) { return (await call("adminSubs", { key })).subs; },
       async updateOrder(key, id, fields) { return call("adminUpdateOrder", { key, id, fields }); },
       async saveProducts(key, list) { return call("adminSaveProducts", { key, products: list }); },
+      async events(key, days) { return (await call("adminEvents", { key, days })).events; },
     },
   };
 

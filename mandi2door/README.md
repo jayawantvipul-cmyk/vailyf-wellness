@@ -38,3 +38,9 @@ Open `index.html`, place an order, then open `admin.html` (PIN `1234`) in the sa
 - **Savings are honest**: they're measured against the *cheapest* comparison price, not the most expensive one.
 - **Prices can't be tampered with**: the server re-calculates every order from the sheet.
 - **Milk subscriptions are billed monthly**, the way a regular milkman works. Daily orders are paid by UPI on delivery.
+
+## Visitor tracking & Insights
+- **Tracked links:** admin → 📈 Insights → "Make a tracked link". Share a different link per WhatsApp group, poster or flyer (e.g. `…/mandi2door/?src=lift-poster`). A QR code button is included for posters.
+- **Insights tab:** visitors, sources, shopping funnel, most added and removed items, searches with no results, language split and order hours. Data is saved in the **Events** tab of your Sheet (created automatically), with no names or phone numbers.
+- **Microsoft Clarity (recordings and heatmaps):** create a free project at clarity.microsoft.com, then put its project ID in `config.js` → `CLARITY_ID`. Typed text is hidden.
+- **Backend update needed:** paste the new `apps-script/Code.gs` into Apps Script, then Deploy → Manage deployments → ✏️ Edit → Version: **New version** → Deploy. The URL stays the same.
