@@ -9,18 +9,22 @@
 
 const PRODUCT_COLS = ["id", "cat", "emoji", "en", "mr", "hi", "unit", "price", "cost", "blinkit", "instamart", "zepto", "local", "active"];
 const ORDER_COLS = ["id", "createdAt", "deliveryDate", "name", "phone", "wing", "flat", "note", "itemsText", "items", "subtotal", "fee", "total", "savings", "payment", "status"];
+const EVENT_COLS = ["ts", "date", "hour", "vid", "sid", "event", "src", "lang", "a", "n"];
+const EVENT_NAMES = ["open", "cat", "search", "add", "remove", "cart", "checkout", "order", "order_fail", "sub", "lang", "upi", "wa"];
+// Read-only actions skip the queue so the 10 PM rush does not block them.
+const NO_LOCK = ["products", "myOrders", "mySubs", "adminPing", "adminOrders", "adminSubs", "adminEvents"];
 const SUB_COLS = ["id", "createdAt", "phone", "name", "wing", "flat", "productId", "qty", "freq", "days", "start", "status", "pauseUntil"];
 
 function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
+  let lock = null;
   try {
     const req = JSON.parse(e.postData.contents);
+    if (NO_LOCK.indexOf(req.action) < 0) { lock = LockService.getScriptLock(); lock.waitLock(20000); }
     return json(route(req));
   } catch (err) {
     return json({ error: String(err.message || err) });
   } finally {
-    lock.releaseLock();
+    if (lock) lock.releaseLock();
   }
 }
 function doGet() { return json(route({ action: "products" })); }
@@ -32,6 +36,7 @@ function route(req) {
   if (a === "myOrders") return { orders: readAll("Orders").filter(o => String(o.phone) === String(req.phone) && String(o.flat) === String(req.flat)).map(fixOrder).reverse().slice(0, 30) };
   if (a === "mySubs") return { subs: readAll("Subscriptions").filter(s => String(s.phone) === String(req.phone) && String(s.flat) === String(req.flat) && s.status !== "cancelled").map(fixSub) };
   if (a === "saveSub") return saveSub(req.sub);
+  if (a === "track") return track(req.events);
 
   // Everything below needs the admin key.
   if (!req.key || req.key !== prop("ADMIN_KEY")) throw new Error("Unauthorized");
@@ -39,6 +44,7 @@ function route(req) {
   if (a === "adminOrders") return { orders: readAll("Orders").filter(o => fmtDate(o.deliveryDate) === req.date).map(fixOrder) };
   if (a === "adminSubs") return { subs: readAll("Subscriptions").map(fixSub) };
   if (a === "adminUpdateOrder") return updateRow("Orders", ORDER_COLS, req.id, req.fields);
+  if (a === "adminEvents") return { events: readEvents(req.days) };
   if (a === "adminSaveProducts") {
     writeAll("Products", PRODUCT_COLS, req.products);
     PropertiesService.getScriptProperties().setProperty("PRICES_UPDATED", today());
@@ -88,6 +94,45 @@ function saveSub(s) {
   if (existing) return updateRow("Subscriptions", SUB_COLS, s.id, row);
   sheet("Subscriptions").appendRow(SUB_COLS.map(c => row[c]));
   return { ok: true };
+}
+
+// ---------- visitor tracking ----------
+function eventsSheet() {
+  const ss = SpreadsheetApp.getActive();
+  let sh = ss.getSheetByName("Events");
+  if (!sh) {
+    sh = ss.insertSheet("Events");
+    sh.appendRow(EVENT_COLS);
+    sh.setFrozenRows(1);
+    sh.getRange("B:B").setNumberFormat("@");
+    sh.getRange("D:I").setNumberFormat("@");
+  }
+  return sh;
+}
+function track(events) {
+  if (!Array.isArray(events)) throw new Error("Bad events");
+  const now = new Date(), date = today(), hour = Number(Utilities.formatDate(now, tz(), "H"));
+  const id = (v) => String(v || "").replace(/[^a-z0-9]/gi, "").slice(0, 20);
+  const rows = events.slice(0, 50).filter(ev => ev && EVENT_NAMES.indexOf(ev.e) >= 0 && id(ev.v)).map(ev => [
+    now.toISOString(), date, hour, id(ev.v), id(ev.s), ev.e,
+    String(ev.src || "direct").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40) || "direct",
+    ["en", "mr", "hi"].indexOf(ev.lang) >= 0 ? ev.lang : "en",
+    clean(ev.a).slice(0, 60), Math.max(0, Math.min(100000, Number(ev.n) || 0)),
+  ]);
+  if (!rows.length) return { ok: true, saved: 0 };
+  const sh = eventsSheet();
+  sh.getRange(sh.getLastRow() + 1, 1, rows.length, EVENT_COLS.length).setValues(rows);
+  return { ok: true, saved: rows.length };
+}
+function readEvents(days) {
+  days = Math.max(1, Math.min(90, Number(days) || 7));
+  const sh = eventsSheet(), last = sh.getLastRow();
+  if (last < 2) return [];
+  const start = Math.max(2, last - 29999); // newest 30,000 events at most
+  const from = Utilities.formatDate(new Date(Date.now() - (days - 1) * 86400000), tz(), "yyyy-MM-dd");
+  return sh.getRange(start, 2, last - start + 1, 9).getValues()
+    .map(r => [fmtDate(r[0]), Number(r[1]), String(r[2]), String(r[3]), String(r[4]), String(r[5]), String(r[6]), String(r[7]), Number(r[8]) || 0])
+    .filter(r => r[0] >= from);
 }
 
 // ---------- helpers ----------

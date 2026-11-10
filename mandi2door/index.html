@@ -118,6 +118,7 @@ nav button.on{color:var(--g)}
     <div class="chips" id="chips"></div>
     <p class="note" id="pnote"></p>
     <div class="grid" id="grid"></div>
+    <p class="note" style="margin-top:14px;text-align:center" data-t="privacy"></p>
   </section>
 
   <!-- SUBSCRIPTIONS -->
@@ -135,18 +136,18 @@ nav button.on{color:var(--g)}
       <div class="days" id="sdays" hidden></div>
       <button class="btn" id="sbtn" data-t="startSub"></button>
     </div>
-    <div id="slist"></div>
+    <div id="slist" data-clarity-mask="true"></div>
   </section>
 
   <!-- ORDERS -->
   <section class="view" id="v-orders">
     <div class="save" id="osave" hidden><div data-t="totalSaved" style="font-weight:600;color:#6b4a00"></div><div class="big" id="osaveamt"></div></div>
-    <div id="olist"></div>
+    <div id="olist" data-clarity-mask="true"></div>
   </section>
 
   <!-- CART -->
   <section class="view" id="v-cart">
-    <div id="cartbody"></div>
+    <div id="cartbody" data-clarity-mask="true"></div>
   </section>
 </main>
 
@@ -164,6 +165,7 @@ nav button.on{color:var(--g)}
 
 <script src="config.js"></script>
 <script src="common.js"></script>
+<script src="analytics.js"></script>
 <script>
 const {C,T,LS,api,rupee,esc,cheapestElsewhere,saving,nextDeliveryDate,cutoffMoment,deliveryFee,upiLink,waLink,uid,parseYmd,COMPARE,COMPARE_LABEL}=M2D;
 let lang=LS.get("lang","en"), cat="all", products=[], pricesUpdated="", cart=LS.get("cart",{}), me=LS.get("me",null), subDays=[];
@@ -213,7 +215,9 @@ function renderGrid(){
   }).join("")||`<div class="empty"><div>🔍</div></div>`;
 }
 function setQty(id,d){
+  if(d<0&&!cart[id])return;
   cart[id]=Math.max(0,(cart[id]||0)+d); if(!cart[id])delete cart[id];
+  M2D.track(d>0?"add":"remove",id);
   LS.set("cart",cart);
   const st=$("#st-"+id); if(st)st.innerHTML=stepper(id);
   renderBar(); if($("#v-cart").classList.contains("on"))renderCart();
@@ -273,8 +277,10 @@ async function placeOrder(){
   const items=Object.entries(cart).map(([id,q])=>{const p=byId(id);return {id,name:p.en,unit:p.unit,qty:q,price:p.price,cost:p.cost,save:saving(p)}});
   const o={id:uid("M2D-"),createdAt:new Date().toISOString(),deliveryDate:nextDeliveryDate(),...m,
     note:$("#fnote").value.trim(),items,subtotal:x.sub,fee:x.fee,total:x.total,savings:x.sav,payment:"pending",status:"placed"};
+  M2D.track("checkout","",x.total);
   const b=$("#place"); b.disabled=true; b.textContent="…";
-  try{ await api.placeOrder(o); }catch(e){ b.disabled=false; b.textContent=t("placeOrder"); toast("Could not place order. Check internet and retry."); return; }
+  try{ await api.placeOrder(o); }catch(e){ M2D.track("order_fail",e.message); b.disabled=false; b.textContent=t("placeOrder"); toast("Could not place order. Check internet and retry."); return; }
+  M2D.track("order",o.id,o.total); M2D.flushTracking();
   cart={}; LS.set("cart",cart); renderBar(); renderGrid();
   const summary=`*Mandi2Door order ${o.id}*\n${m.name}, ${m.wing}-${m.flat}\nDelivery: ${fmtDate(o.deliveryDate)}, ${C.DELIVERY_SLOT}\n`+
     items.map(i=>`• ${i.name} ${i.unit} × ${i.qty} = ₹${i.price*i.qty}`).join("\n")+
@@ -332,7 +338,7 @@ async function startSub(){
   if(freq==="custom"&&!subDays.length){toast("Pick at least one day");return;}
   const s={id:uid("SUB-"),phone:me.phone,name:me.name,wing:me.wing,flat:me.flat,productId:$("#sp").value,qty:Number($("#sq").value),
     freq,days:subDays.join(","),start:nextDeliveryDate(),status:"active",pauseUntil:"",createdAt:new Date().toISOString()};
-  await api.saveSub(s); toast("✓ "+t("active")); renderSubs();
+  await api.saveSub(s); M2D.track("sub",s.productId,s.qty); toast("✓ "+t("active")); renderSubs();
 }
 function askDetails(after){
   const d=me||{};
@@ -349,7 +355,7 @@ function askDetails(after){
 function show(v){
   document.querySelectorAll(".view").forEach(e=>e.classList.toggle("on",e.id==="v-"+v));
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
-  if(v==="cart")renderCart(); if(v==="orders")renderOrders(); if(v==="subs")renderSubs();
+  if(v==="cart"){renderCart();M2D.track("cart","",totals().sub);} if(v==="orders")renderOrders(); if(v==="subs")renderSubs();
   renderBar(); scrollTo(0,0);
 }
 function renderAll(){renderChips();renderGrid();renderBar();const v=document.querySelector("nav button.on").dataset.v;if(v!=="shop")show(v);tick();}
@@ -358,8 +364,8 @@ document.addEventListener("click",async e=>{
   const b=e.target.closest("button,[data-a]"); if(!b)return;
   if(b.dataset.a){setQty(b.dataset.a,1);return}
   if(b.dataset.d){setQty(b.dataset.d,-1);return}
-  if(b.dataset.c){cat=b.dataset.c;renderChips();renderGrid();return}
-  if(b.dataset.l){lang=b.dataset.l;LS.set("lang",lang);applyLang();return}
+  if(b.dataset.c){cat=b.dataset.c;renderChips();renderGrid();M2D.track("cat",cat);return}
+  if(b.dataset.l){lang=b.dataset.l;LS.set("lang",lang);applyLang();M2D.track("lang",lang);return}
   if(b.dataset.v){show(b.dataset.v);return}
   if(b.dataset.wd){const i=+b.dataset.wd;subDays=subDays.includes(i)?subDays.filter(x=>x!==i):[...subDays,i];renderSubForm();return}
   if(b.dataset.sp||b.dataset.sx){const s=$("#slist")._list.find(x=>x.id===(b.dataset.sp||b.dataset.sx));
@@ -371,7 +377,8 @@ document.addEventListener("click",async e=>{
   if(b.id==="place")placeOrder();
   if(b.id==="sbtn")startSub();
 });
-$("#q").addEventListener("input",renderGrid);
+$("#q").addEventListener("input",()=>{renderGrid();clearTimeout(window._qt);window._qt=setTimeout(()=>{const q=$("#q").value.trim();if(q.length>=2)M2D.track("search",q,document.querySelectorAll("#grid .card").length)},1200)});
+document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(!a)return;if(a.href.startsWith("upi:"))M2D.track("upi");else if(a.href.includes("wa.me"))M2D.track("wa");});
 $("#sf").addEventListener("change",renderSubForm);
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").classList.remove("on")});
 
@@ -381,6 +388,7 @@ $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").cl
   catch(e){products=M2D.DEFAULT_PRODUCTS;toast("Showing saved prices (offline)");}
   products.forEach(p=>["price","cost",...COMPARE].forEach(k=>p[k]=Number(p[k])||0));
   applyLang(); setInterval(tick,30000);
+  M2D.track("open",M2D.trackInfo.isNew?"new":"return");
 })();
 </script>
 </body>

@@ -13,5 +13,6 @@ window.M2D_CONFIG = {
   DELIVERY_SLOT: "6–8 AM",
   FREE_DELIVERY_ABOVE: 149,
   DELIVERY_FEE: 15,
+  CLARITY_ID: "",                 // Microsoft Clarity project ID (heatmaps/recordings). Empty = off
   DEMO_ADMIN_PIN: "1234"           // demo mode only; live mode uses the key in Apps Script
 };
