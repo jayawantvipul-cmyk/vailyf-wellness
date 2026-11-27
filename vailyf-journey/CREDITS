@@ -1,0 +1,26 @@
+Meera's Journal: a VaiLyf Wellness film
+Third-party material used in the film, with its source and licence.
+
+MUSIC (original score in score.py, played on these instruments)
+Piano: "Salamander Grand Piano V3" by Alexander Holm, licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+Samples (CC0): VS Chamber Orchestra: Community Edition (Versilian Studios) — flute, violas. github.com/sgossner/VSCO-2-CE
+Kalimba and nylon guitar: physically modelled in code (Lemo-Opuscar core/audio/pluck.py, MIT); no samples.
+
+VOICE
+Hindi narration: Microsoft neural text-to-speech voice "hi-IN-SwaraNeural", generated through the open-source
+edge-tts client (github.com/rany2/edge-tts, LGPL-3.0). The voice output is subject to Microsoft's terms of service;
+check them before commercial use.
+Speech check (not in the film): faster-whisper (MIT) with the Whisper "medium" model (OpenAI, MIT).
+
+FONTS (SIL Open Font License 1.1; licence texts in fonts/)
+Kalam — Copyright (c) 2014, Indian Type Foundry
+Tiro Devanagari Hindi — Copyright 2020 The Indigo Project Authors (github.com/TiroTypeworks/Indigo)
+Cormorant Garamond — Copyright 2015 the Cormorant Project Authors
+IBM Plex Mono — Copyright © 2017 IBM Corp.
+
+CODE
+Stroke engine (engine.js) and paper generator (tools/paper.py): from the Lemo-Opuscar "Watercolor Brush" demo,
+github.com/lemomo-ai/lemo-opuscar, MIT licence. Rendering, mixing and mastering tools: Lemo-Opuscar core/, MIT.
+
+Everything else (story, drawings, score, sound effects) was made for this film in code.
+Meera is a fictional character.
