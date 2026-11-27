@@ -1,0 +1,25 @@
+1
+00:00:00,250 --> 00:00:05,547
+दोपहर तक थकान? हो सकता है पानी कम पिया हो।
+Tired by afternoon? You may not be drinking enough water.
+
+2
+00:00:05,127 --> 00:00:08,560
+पहला: उठते ही एक गिलास पानी।
+One: a glass of water as soon as you wake up.
+
+3
+00:00:08,140 --> 00:00:11,975
+दूसरा: अपनी बोतल डेस्क पर रखें।
+Two: keep your bottle on your desk.
+
+4
+00:00:11,555 --> 00:00:15,381
+तीसरा: हर खाने के साथ एक गिलास।
+Three: a glass with every meal.
+
+5
+00:00:18,431 --> 00:00:22,331
+सेशन बुक करने के लिए कमेंट करें: BOOK
+Comment BOOK to book your session.
+

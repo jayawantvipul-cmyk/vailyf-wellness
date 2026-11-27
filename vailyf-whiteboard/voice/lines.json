@@ -1,0 +1,15 @@
+[
+ {"id":"h1","text":"दोपहर तक थकान? हो सकता है पानी कम पिया हो।","en":"Tired by afternoon? You may not be drinking enough water."},
+ {"id":"h2","text":"पहला: उठते ही एक गिलास पानी।","en":"One: a glass of water as soon as you wake up."},
+ {"id":"h3","text":"दूसरा: अपनी बोतल डेस्क पर रखें।","en":"Two: keep your bottle on your desk."},
+ {"id":"h4","text":"तीसरा: हर खाने के साथ एक गिलास।","en":"Three: a glass with every meal."},
+ {"id":"s1","text":"सुबह उठते ही थकान? ये तीन आदतें अपनाएँ।","en":"Tired the moment you wake up? Try these three habits."},
+ {"id":"s2","text":"पहला: रोज़ एक ही समय पर सोएँ और उठें।","en":"One: sleep and wake at the same time every day."},
+ {"id":"s3","text":"दूसरा: सोने से एक घंटा पहले स्क्रीन बंद।","en":"Two: screens off an hour before bed."},
+ {"id":"s4","text":"तीसरा: 7 से 9 घंटे की नींद।","say":"तीसरा: सात से नौ घंटे की नींद।","en":"Three: seven to nine hours of sleep."},
+ {"id":"m1","text":"दिन भर कुर्सी पर बैठे रहते हैं?","en":"Sitting in a chair all day?"},
+ {"id":"m2","text":"पहला: हर घंटे उठें और स्ट्रेच करें।","en":"One: stand up and stretch every hour."},
+ {"id":"m3","text":"दूसरा: लंच के बाद 10 मिनट की सैर।","say":"दूसरा: लंच के बाद दस मिनट की सैर।","en":"Two: a ten-minute walk after lunch."},
+ {"id":"m4","text":"तीसरा: लिफ्ट नहीं, सीढ़ियाँ।","en":"Three: take the stairs, not the lift."},
+ {"id":"cta","text":"सेशन बुक करने के लिए कमेंट करें: BOOK","say":"सेशन बुक करने के लिए कमेंट करें, बुक।","en":"Comment BOOK to book your session."}
+]
