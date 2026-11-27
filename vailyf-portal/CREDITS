@@ -1,0 +1,21 @@
+Your First Week on VaiLyf: an onboarding film for the VaiLyf Wellness portal
+Third-party material used in the film, with its source and licence.
+
+MUSIC (original score in score.py, played on these sampled instruments)
+Samples (CC0): FreePats project (freepats.zenvoid.org) — kalimba, nylon guitar
+Samples (CC0): Versilian Community Sample Library, Versilian Studios (github.com/sgossner/VCSL) — marimba, glockenspiel, shaker, claps
+Samples (CC0): VS Chamber Orchestra: Community Edition, Versilian Studios (github.com/sgossner/VSCO-2-CE) — pizzicato violins, violas
+
+VOICE
+Narration: Kokoro-82M text-to-speech (hexgrad, huggingface.co/hexgrad/Kokoro-82M, Apache-2.0), voice "af_bella",
+run with kokoro-onnx (MIT). Speech check (not in the film): faster-whisper (MIT), Whisper "small.en" (OpenAI, MIT).
+
+FONT (SIL Open Font License 1.1; licence text in fonts/)
+Jost — Copyright 2020 The Jost Project Authors (github.com/indestructible-type)
+
+CODE
+Isometric engine (engine.js): from the Lemo-Opuscar "Isometric Infographic" demo, github.com/lemomo-ai/lemo-opuscar, MIT.
+Rendering, mixing and mastering tools: Lemo-Opuscar core/, MIT.
+
+Everything else (the tower, the scenes, the score, the sound effects) was made for this film in code.
+The figures are fictional. Point values (+20 per log) are from the portal's own interface; prizes are shown generically.

@@ -1,0 +1,46 @@
+[
+ {
+  "id": "v1",
+  "text": "New to Vai-Life? Here's your portal, floor by floor.",
+  "asr": "New to ViLife? Here's your portal, floor by floor.",
+  "voice": "af_bella",
+  "speed": 1.0
+ },
+ {
+  "id": "v2",
+  "text": "Every day, log your water, meals, steps, sleep and mood.",
+  "voice": "af_bella",
+  "speed": 1.02
+ },
+ {
+  "id": "v3",
+  "text": "Each log earns twenty points and keeps your streak going.",
+  "voice": "af_bella",
+  "speed": 1.0
+ },
+ {
+  "id": "v4",
+  "text": "Join team challenges and climb the leaderboard for monthly prizes.",
+  "voice": "af_bella",
+  "speed": 1.04
+ },
+ {
+  "id": "v5",
+  "text": "Your coach sends you a plan. Book a one-to-one any time.",
+  "voice": "af_bella",
+  "speed": 1.02
+ },
+ {
+  "id": "v6",
+  "text": "Watch your progress grow, week by week.",
+  "voice": "af_bella",
+  "speed": 1.0
+ },
+ {
+  "id": "v7",
+  "text": "Vai-Life Wellness. Log your first day today.",
+  "asr": "ViLife Wellness. Log your first day today.",
+  "voice": "af_bella",
+  "speed": 0.98
+ }
+]
