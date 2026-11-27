@@ -1,0 +1,22 @@
+Keep Going (गिरना हार नहीं है): a VaiLyf Wellness motivational reel
+Third-party material used in the reel, with its source and licence.
+
+MUSIC (original score in score.py)
+Samples (CC0): VS Chamber Orchestra: Community Edition, Versilian Studios (github.com/sgossner/VSCO-2-CE) — cellos
+Samples (CC0): Versilian Community Sample Library, Versilian Studios (github.com/sgossner/VCSL) — glockenspiel
+
+VOICE
+Hindi narration: Microsoft neural text-to-speech voice "hi-IN-SwaraNeural", generated through the open-source edge-tts
+client (github.com/rany2/edge-tts, LGPL-3.0). The voice output is subject to Microsoft's terms of service; check them
+before commercial use. Speech check (not in the reel): faster-whisper (MIT), Whisper "medium" (OpenAI, MIT).
+
+FONTS (SIL Open Font License 1.1; licence texts in fonts/)
+Kalam — Copyright (c) 2014, Indian Type Foundry
+Caveat — The Caveat Project Authors
+Sacramento — Astigmatic
+
+CODE
+Line engine (geom.js, ink.js, paper.js, cam.js, hands.js): from the Lemo-Opuscar "One-line Drawing" demo,
+github.com/lemomo-ai/lemo-opuscar, MIT; ink and camera adapted for this reel. Rendering, mixing and mastering tools: Lemo-Opuscar core/, MIT.
+
+The drawing, the score and the pen sound were made for this reel in code. The message was written for VaiLyf Wellness.
