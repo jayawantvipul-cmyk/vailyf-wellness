@@ -1,6 +1,6 @@
 // Keep Going — one line that climbs, falls, stops, and keeps going. 1080×1920.
 import { buildPath, headAt, posAt } from './geom.js';
-import { SEGS, VALLEY } from './drawing.js';
+import { SEGS, VALLEY, SPEED } from './drawing.js';
 import { prepare, drawLine, drawBlots } from './ink.js';
 import { makePaper, drawPaper, vignette, makeTooth, drawTooth } from './paper.js';
 import { camAt, worldToScreen } from './cam.js';
@@ -12,22 +12,22 @@ const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 const W = cv.width, H = cv.height;
 for (const f of ['400 46px Kalam', '500 40px Caveat', '80px Sacramento']) await document.fonts.load(f, 'Aaगिरना');
 
-export const DUR = 31.0;
+export const DUR = 23.6;
 // voice (durations from voice/out/dur.json); sub = subtitle window; v5 is written on the paper instead
 const VO = [
-  { id: 'v1', t0: 0.4, dur: 1.954, hi: 'हार मानने का मन कर रहा है?', en: 'Feel like giving up?' },
-  { id: 'v2', t0: 4.5, dur: 1.317, hi: 'हर कोई गिरता है।', en: 'Everyone falls.' },
-  { id: 'v3', t0: 8.9, dur: 3.029, hi: 'पर गिरने के बाद जो फिर से उठता है…', en: 'But the one who gets up again after falling…' },
-  { id: 'v4', t0: 13.3, dur: 1.564, hi: 'वही आगे बढ़ता है।', en: 'is the one who moves ahead.' },
-  { id: 'v5', t0: 19.6, dur: 6.293, hi: null, en: null },
-  { id: 'v6', t0: 26.3, dur: 3.718, hi: 'किसी ऐसे को भेजिए जिसे आज ये सुनना ज़रूरी है।', en: 'Send this to someone who needs to hear it today.' },
+  { id: 'v1', t0: 0.3, dur: 1.459, hi: 'हार मानने का मन कर रहा है?', en: 'Feel like giving up?' },
+  { id: 'v2', t0: 3.33, dur: .984, hi: 'हर कोई गिरता है।', en: 'Everyone falls.' },
+  { id: 'v3', t0: 6.55, dur: 2.239, hi: 'पर गिरने के बाद जो फिर से उठता है…', en: 'But the one who gets up again after falling…' },
+  { id: 'v4', t0: 9.85, dur: 1.175, hi: 'वही आगे बढ़ता है।', en: 'is the one who moves ahead.' },
+  { id: 'v5', t0: 14.52, dur: 5.14, hi: null, en: null },
+  { id: 'v6', t0: 19.85, dur: 2.751, hi: 'किसी ऐसे को भेजिए जिसे आज ये सुनना ज़रूरी है।', en: 'Send this to someone who needs to hear it today.' },
 ];
 // the key line, written on the paper below the range as it is spoken (word timings from whisper)
 const WRITE = [
-  { text: 'गिरना हार नहीं है,', font: '400 80px Kalam', y: 1150, t0: 21.8, t1: 23.3 },
-  { text: 'रुक जाना हार है।', font: '400 80px Kalam', y: 1260, t0: 24.5, t1: 25.8 },
-  { text: "Falling isn't failing. Stopping is.", font: '500 46px Caveat', y: 1345, t0: 26.0, t1: 26.9 },
-  { text: 'VaiLyf Wellness', font: '72px Sacramento', y: 1455, t0: 27.1, t1: 28.3, col: [29, 26, 23] },
+  { text: 'गिरना हार नहीं है,', font: '400 80px Kalam', y: 1150, t0: 16.3, t1: 17.35 },
+  { text: 'रुक जाना हार है।', font: '400 80px Kalam', y: 1260, t0: 18.55, t1: 19.6 },
+  { text: "Falling isn't failing. Stopping is.", font: '500 46px Caveat', y: 1345, t0: 19.45, t1: 19.95 },
+  { text: 'VaiLyf Wellness', font: '72px Sacramento', y: 1455, t0: 20.0, t1: 20.75, col: [29, 26, 23] },
 ];
 // camera: x, y = composition centre (paper units), z = zoom, r = roll (deg), f = follow weight
 const CAM = [
@@ -43,8 +43,8 @@ const CAM = [
   { t: 17.6, x: 280, y: -470, z: 2.25, r: 0, f: .12 },            // the sun
   { t: 19.2, x: 280, y: -460, z: 2.25, r: 0, f: .1 },
   { t: 21.6, x: 130, y: 370, z: .7, r: 0, f: 0 },                 // continuous pull-back: it was one mountain range
-  { t: DUR, x: 130, y: 380, z: .7, r: 0, f: 0 },
-];
+  { t: 31.0, x: 130, y: 380, z: .7, r: 0, f: 0 },
+].map(k => ({ ...k, t: k.t / SPEED }));
 
 const P = prepare(buildPath(SEGS));
 const paper = makePaper(), tooth = makeTooth();
@@ -111,11 +111,11 @@ function events() {
   }
   ev.push({ t: 0, type: 'track', data: track });
   ev.push({ t: 0, type: 'tap' }, { t: hold.t, type: 'blot', dur: hold.dur }, { t: hold.t + hold.dur, type: 'tap' });
-  ev.push({ t: SEGS.find(s => s.id === 'sun').t[0] + 1.0, type: 'chime' });
+  ev.push({ t: SEGS.find(s => s.id === 'sun').t[0] + 1.0 / SPEED, type: 'chime' });
   for (const s of SEGS) ev.push({ t: s.t[0], type: 'seg', id: s.id, t1: s.t[1] });
   for (const v of VO) ev.push({ t: v.t0, type: 'vo', id: v.id });
   for (const v of VO) if (v.hi) ev.push({ t: v.t0, type: 'sub', t1: v.t0 + Math.max(1.8, v.dur + .6), hi: v.hi, en: v.en });
-  ev.push({ t: 21.8, type: 'sub', t1: 26.0, hi: 'याद रखिए: गिरना हार नहीं है, रुक जाना हार है।', en: "Remember: falling isn't failing. Stopping is." });
+  ev.push({ t: 16.3, type: 'sub', t1: 19.7, hi: 'याद रखिए: गिरना हार नहीं है, रुक जाना हार है।', en: "Remember: falling isn't failing. Stopping is." });
   return ev;
 }
 

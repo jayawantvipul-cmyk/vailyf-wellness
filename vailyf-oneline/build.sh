@@ -22,5 +22,5 @@ import json; E=json.load(open('$HERE/events.json'))
 S=sorted([e for e in E['ev'] if e['type']=='sub'], key=lambda e: e['t'])
 ts=lambda x: '%02d:%02d:%02d,%03d' % (int(x//3600), int(x%3600//60), int(x%60), int(round(x%1*1000)))
 open('$HERE/subtitles_hi-en.srt','w',encoding='utf-8').write(''.join(f\"{i}\n{ts(s['t'])} --> {ts(s['t1'])}\n{s['hi']}\n{s['en']}\n\n\" for i, s in enumerate(S, 1)))"
-ffmpeg -v error -y -ss 29.5 -i "$HERE/vailyf-keep-going.mp4" -frames:v 1 -q:v 2 "$HERE/poster.jpg"
+ffmpeg -v error -y -ss 23.0 -i "$HERE/vailyf-keep-going.mp4" -frames:v 1 -q:v 2 "$HERE/poster.jpg"
 echo "✓ $HERE/vailyf-keep-going.mp4"

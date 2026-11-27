@@ -35,3 +35,11 @@ export const SEGS = [
   { id: 'sun', style: 'sun', t: [17.1, 19.2], parts: [{ d: SUN_D }], slowK: 1.0 },
   { id: 'descend', style: 'descend', t: [19.2, 25.5], parts: [{ d: DESCEND }], slowK: 1.2 },
 ];
+
+// Pace: the whole reel runs SPEED× faster than the timings written above (picture, stop and camera scale together).
+export const SPEED = 1.35;
+for (const sg of SEGS) {
+  sg.t = sg.t.map(x => x / SPEED);
+  (sg.marks || []).forEach(m => { m.t /= SPEED; });
+  (sg.holds || []).forEach(h => { h.t /= SPEED; h.dur /= SPEED; });
+}
