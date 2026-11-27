@@ -1,0 +1,52 @@
+[
+ {
+  "id": "v1",
+  "text": "मीरा के दिन थकान से शुरू होते थे।",
+  "en": "Meera's days began with tiredness."
+ },
+ {
+  "id": "v2",
+  "text": "कम नींद, तीसरी कॉफ़ी, और मुरझाया मन।",
+  "en": "Too little sleep, a third coffee, a wilted mood."
+ },
+ {
+  "id": "v3",
+  "text": "फिर उसने VaiLyf पर रोज़ का छोटा-सा लॉग शुरू किया।",
+  "say": "फिर उसने वाइलाइफ़ पर रोज़ का छोटा-सा लॉग शुरू किया।",
+  "en": "Then she started a small daily log on VaiLyf."
+ },
+ {
+  "id": "v4a",
+  "text": "आठ गिलास पानी। घर का खाना।",
+  "en": "Eight glasses of water. Home-cooked food."
+ },
+ {
+  "id": "v4b",
+  "text": "6,000 क़दम। सात घंटे की नींद।",
+  "say": "छह हज़ार क़दम। सात घंटे की नींद।",
+  "en": "6,000 steps. Seven hours of sleep."
+ },
+ {
+  "id": "v5",
+  "text": "जिस दिन मन नहीं किया, उस दिन टीम साथ थी।",
+  "en": "On the days she didn't feel like it, her team was there."
+ },
+ {
+  "id": "v6",
+  "text": "चार हफ़्ते। छोटी आदतें, बड़ा फ़र्क़।",
+  "en": "Four weeks. Small habits, a big difference."
+ },
+ {
+  "id": "v7",
+  "text": "अब मीरा पूछती है, आज क्या नया करूँ?",
+  "en": "Now Meera asks: what new thing shall I try today?"
+ },
+ {
+  "id": "v8",
+  "text": "VaiLyf Wellness: आपकी टीम की सेहत का साथी।",
+  "say": "वाइलाइफ़ वेलनेस, आपकी टीम की सेहत का साथी।",
+  "en": "VaiLyf Wellness: your team's partner in health.",
+  "asr": "Wildlife Wellness आपकी टीम की सेहत का साथी",
+  "note": "Whisper medium writes the brand name as English \"Wildlife\"; Whisper small hears वाईलाइप, as v3 is heard वाईलाइफ."
+ }
+]
